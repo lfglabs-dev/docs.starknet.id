@@ -1,0 +1,40 @@
+# StarkNet.ID Architecture
+
+Explore the foundational elements of StarkNet.ID's architecture. This page provides a clear overview of the system's core components.
+
+import IdCardIcon from "@components/icons/id-card.svg";
+import LinkIcon from "@components/icons/link.svg";
+import WarningIcon from "@components/icons/warning.svg";
+import { Card, Cards } from "nextra/components";
+
+At the core of StarkNet.ID is identity. The platform provides a secure way for users to store and share their data within the StarkNet ecosystem whichh simplifies data interactions across different protocols.
+
+<Cards>
+  <Card
+    icon={<IdCardIcon />}
+    title="Identity Management"
+    href="/architecture/identity-management"
+  />
+</Cards>
+
+Stark domains provide a user friendly way to share their identity data. This is provided by the Stark Naming System which guarantees unique and user-friendly domain registrations, making sure that a domain is unmistakably tied to its owner.
+
+<Cards>
+  <Card
+    icon={<LinkIcon />}
+    title="Stark Naming System"
+    href="/architecture/naming-system"
+  />
+</Cards>
+
+A feature of StarkNet.ID is its auto-renewal system. Users don’t need to remember domain expiry dates; StarkNet.ID takes care of renewing domains automatically. This ensures domains remain active without any manual intervention.
+
+<Cards>
+  <Card
+    icon={<WarningIcon />}
+    title="Auto-Renewal"
+    href="/architecture/auto-renewal"
+  />
+</Cards>
+
+---
