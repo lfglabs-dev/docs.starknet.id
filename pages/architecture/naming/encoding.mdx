@@ -1,1 +1,160 @@
-# TODO
+# Encoding Algorithm
+
+This page describes name to felt encoding and decoding algorithms.
+
+## Why not using UTF-8?
+
+Short strings are usually encoded as UTF-8 and stored in a felt (a number). This allows strings of up 31 characters (using ascii chars only), but this is far from ideal for storing domain names.
+First of all, all unicode characters are supported and this makes the system vulnerable to [homograph attacks](https://en.wikipedia.org/wiki/IDN_homograph_attack). Indeed, several characters have the same visual appearance, allowing someone malicious to register a domain name indistinguishable from yours but linked to his own address. Try copy pasting: аррӏе.com in your web browser and see what happens. Instead of the apple website you should get a blank page with a proof of concept of this attack, and if you are using a modern web browser, the url could be displayed differently to warn you that this is not the site you think it is:
+
+![Demo of homograph attack](https://2742896853-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FWiVGIamyAI2qdOryOMiS%2Fuploads%2FxaBKI6Z4iwU6MRei5nAB%2Fimage.png?alt=media&token=b1ac3003-78d2-4ba9-9525-d22fe69bd94f)
+![Meme about homograph attack](https://2742896853-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FWiVGIamyAI2qdOryOMiS%2Fuploads%2FeBui6fIXjU4HEmxidtQR%2Fhomograph.webp?alt=media&token=c91125f8-d6d5-4438-ade1-4eb2b6f40792)
+
+These attacks must be avoided at all costs for a blockchain naming service because the domain names will be used to send money. The most intuitive solution would be to blacklist certain characters. ENS does it from the web application which forbids you to register certain problematic domain names but it is still possible using the smartcontract directly and that is why [this kind of bot](https://github.com/kovart/forta-ens-spoofing) is developed. Forbidding values via the contract could work, but of all the values that can be contained in a felt, a good half would be forbidden. We propose a solution that does not forbid any felt value, but associates each one with a correct string that does not pose a security risk.
+
+## How does it work?
+
+A name can contain characters from two different alphabets. The basic one contains only lowercase Latin characters, numbers and the dash. The extended alphabet is not yet determined but it will contain characters from other languages. They will be carefully selected to be easily distinguishable from the others.
+
+_The basic alphabet_
+abcdefghijklmnopqrstuvwxyz0123456789-
+
+_The extended alphabet_
+这来 (this will be extended in the future)
+
+### Considering name as numbers
+
+The original idea was to consider that a name is just a number written from right to left in a specific alphabet and to change the base. Let's take an example with the name "cat" and the basic alphabet. Beware, we start indexes at 0.
+cat = (letter index 2), (letter index 0), (letter index 19)
+The alphabet is of size 37, so:
+
+TODO
+
+​To undo the process, we can just divide encoded "cat", 26013, by 37, take the euclidean leftover and restart with the result of the division until we reach 0.
+
+TODO
+
+T​he leftovers are the letter indexes in the alphabet: 2, 0, 19. The numbers on StarkNet are represented by felts, the abbreviation for field elements. The Field is of size P with:
+
+TODO
+
+This means that, depending on the characters chosen, encodings of up to 49 or 50 characters can be stored within a single felt. That is largely sufficient for domain names, but this method has two drawbacks.
+
+- Every single character has the same "price", and "whitelisting" new characters increase this price. If one wanted to also support the Chinese characters that are about 50,000, we could only fit 17 or 18 chars in a felt, which is not ideal because 17 Chinese characters contain much more information than 17 Latin characters.
+
+- You can't end your name with "a", because that would just be like adding 0 at the beginning of your number. 1, 01 or 00000001 are the same number.
+
+### Adding a magic letter
+
+**Adding a magic letter**
+
+We have found a solution to address these drawbacks. Our word will be encoded in two alphabets at the same time. The basic alphabet will contain 37 characters, but the basic encoding will act as if it contained 38. The 38th index would prefix the switch to the extended alphabet. If it is at the end of a word, this extended alphabet would switch to a cloned version with the a at index = 0. This should mean that a word ending by last big alphabet char would be encoded to the same felt than the same word ending with the first big alphabet char followed by the second (index 1) small alphabet char. To preserve bijection between the field and the set of writable word, the word will first be preprocessed. If it ends by N last big alphabet char, it will be converted to a word ending by 2N last big alphabet chars. If it ends with N first big alphabet chars and 1 second small alphabet char, it will be converted to word ending by 2N+1 last big alphabet chars. Also when decoding, the parity of the number of last first big alphabets characters will indicate how to transform it.
+
+**Example: a word using only basic alphabet**
+
+Encoding is the same as with a simple alphabet of size 38.
+
+TODO
+
+​Same with decoding.
+
+TODO
+
+**Example: a word using extended alphabet**
+
+You can notice the characters are prefixed by `37*38^i` to indicate the switch to the extended wallet. The first character index is 0, but we add 1 because it is the first character so the alphabet is prefixed by a.
+
+TODO
+
+**Conclusion**
+
+Using this double alphabet reduced the maximum size from 49-50 characters of basic alphabet to 48-49 characters, but it allows to use an entire new set of characters and to end your name with an a.
+
+### Implementation
+
+#### Python
+
+```py
+import random
+
+basicAlphabet = "abcdefghijklmnopqrstuvwxyz0123456789-"
+bigAlphabet = "这来"
+
+def extract_stars(str):
+    k = 0
+    while str.endswith(bigAlphabet[-1]):
+        str = str[:-1]
+        k += 1
+    return (str, k)
+
+def decode(felt):
+    decoded = ""
+    while felt != 0:
+        code = felt % (len(basicAlphabet) + 1)
+        felt = felt // (len(basicAlphabet) + 1)
+        if code == len(basicAlphabet):
+            next_felt = felt // (len(bigAlphabet) + 1)
+            if next_felt == 0:
+                code2 = felt % (len(bigAlphabet) + 1)
+                felt = next_felt
+                decoded += basicAlphabet[0] if code2 == 0 else bigAlphabet[code2 - 1]
+            else:
+                decoded += bigAlphabet[felt % len(bigAlphabet)]
+                felt = felt // len(bigAlphabet)
+        else:
+            decoded += basicAlphabet[code]
+
+    decoded, k = extract_stars(decoded)
+    if k:
+        decoded += (
+            ((bigAlphabet[-1] * (k // 2 - 1)) + bigAlphabet[0] + basicAlphabet[1])
+            if k % 2 == 0
+            else bigAlphabet[-1] * (k // 2 + 1)
+        )
+
+    return decoded
+
+
+def encode(str):
+
+    mul = 1
+    output = 0
+
+    if str.endswith(bigAlphabet[0] + basicAlphabet[1]):
+
+        str, k = extract_stars(str[:-2])
+        str += bigAlphabet[-1] * (2 * (k + 1))
+    else:
+        str, k = extract_stars(str)
+        if k:
+            str += bigAlphabet[-1] * (1 + 2 * (k - 1))
+
+    str_size = len(str)
+
+    for i in range(str_size):
+        c = str[i]
+
+        # if c is a 'a' at the end of the word
+        if i == str_size - 1 and c == basicAlphabet[0]:
+            output += len(basicAlphabet) * mul
+
+        elif c in basicAlphabet:
+            output += mul * basicAlphabet.index(c)
+            mul *= len(basicAlphabet) + 1
+
+        elif c in bigAlphabet:
+            # adding escape char
+            output += len(basicAlphabet) * mul
+            mul *= len(basicAlphabet) + 1
+
+            # adding char from big alphabet
+
+            # otherwise (includes last char)
+            output += mul * (bigAlphabet.index(c) + int(i == str_size - 1))
+            mul *= len(bigAlphabet)
+
+        else:
+            raise RuntimeError("input string contains unsupported characters")
+
+    return output
+```
