@@ -1,1 +1,73 @@
+import { Bleed } from 'nextra-theme-docs'
+
 # Stark Naming System
+
+The Stark Naming System relies on a naming smartcontract and an encoding system to support the resolving of unique names into data on Starknet.
+
+🔗 [View the source code on GitHub](https://github.com/starknet-id/naming)
+
+## Encoding System
+
+The encoding system converts a string, which represents a unique name, into a Starknet FieldElement. This conversion ensures names remain unique post encoding.
+
+For detailed information on the encoding system, refer to the [Encoding System documentation](/architecture/naming/encoding.mdx).
+
+## Naming Contract
+
+The Naming Contract resolves an encoded domain to a Starknet identity and subsequently extracts the specified data.
+
+### Starknet Native Address Resolution
+
+For Starknet native addresses, specific resolution rules apply:
+
+1. The system initially reads the 'starknet' field within the user namespace of the identity NFT.
+2. If there's a direct mapping on the naming contract or a designated resolver that overrides this, that data is used.
+3. In the absence of both, the NFT owner's address is returned.
+
+<Bleed>
+![Starknet Native Address Resolution](/illustrations/resolving.webp)
+</Bleed>
+
+### Reverse Resolving
+
+Reverse resolving identifies the domain associated with an address by:
+
+1. Querying the main Starknet ID associated with the user.
+2. Returning the linked domain if it reciprocates the association and isn't overridden by a reverse mapping.
+
+<Bleed>
+![Reverse Resolving](/illustrations/reverse_resolving.webp)
+</Bleed>
+
+### Contract Interface Overview
+
+The naming contract provides the following key functions:
+
+- `resolve`: Converts a domain to its associated value for a given field.
+- `domain_to_data`: Retrieves comprehensive data linked to a domain.
+- `domain_to_id`: Translates a domain to its unique identifier.
+- `domain_to_address`: Converts a domain to its corresponding contract address.
+- `address_to_domain`: Resolves a contract address to its domain.
+- `buy`: Acquire a new domain or reassign an existing one.
+- `renew`: Extend the registration period of a domain.
+- `transfer_domain`: Change the ownership of a domain.
+- `reset_subdomains`: Reinitialize the subdomains of a domain.
+- Administrative functions, including `set_admin`, `claim_balance`, `set_discount`, `set_pricing_contract`, `set_referral_contract`, and `upgrade`.
+
+For a thorough understanding of the functions and their parameters, please refer to the [source code](https://github.com/starknet-id/naming).
+
+## Deployed Contracts
+
+Here are the contract addresses and their links to the respective blockchain explorers:
+
+- **Mainnet**:
+  
+  - Address: `0x6ac597f8116f886fa1c97a23fa4e08299975ecaf6b598873ca6792b9bbfb678`
+  - [View on StarkScan](https://starkscan.co/nft-contract/0x6ac597f8116f886fa1c97a23fa4e08299975ecaf6b598873ca6792b9bbfb678)
+  - [View on Voyager](https://voyager.online/contract/0x6ac597f8116f886fa1c97a23fa4e08299975ecaf6b598873ca6792b9bbfb678)
+
+- **Goerli Testnet**:
+  
+  - Address: `0x3bab268e932d2cecd1946f100ae67ce3dff9fd234119ea2f6da57d16d29fce`
+  - [View on Testnet StarkScan](https://testnet.starkscan.co/nft-contract/0x3bab268e932d2cecd1946f100ae67ce3dff9fd234119ea2f6da57d16d29fce)
+  - [View on Goerli Voyager](https://goerli.voyager.online/contract/0x3bab268e932d2cecd1946f100ae67ce3dff9fd234119ea2f6da57d16d29fce)
