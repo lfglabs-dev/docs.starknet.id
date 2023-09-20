@@ -2,7 +2,7 @@ import React from "react";
 import { DocsThemeConfig } from "nextra-theme-docs";
 
 const config: DocsThemeConfig = {
-  logo: <span>StarknetID</span>,
+  logo: <img src="/logo.svg" style={{ height: "60px" }} />,
   project: {
     link: "https://github.com/starknet-id",
   },
