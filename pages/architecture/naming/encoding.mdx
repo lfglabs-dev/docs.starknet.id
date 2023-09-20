@@ -28,15 +28,19 @@ The original idea was to consider that a name is just a number written from righ
 cat = (letter index 2), (letter index 0), (letter index 19)
 The alphabet is of size 37, so:
 
-TODO
+$cat = 2*37^0 + 0*37^1 + 19*37^2 = 26013$
 
 ​To undo the process, we can just divide encoded "cat", 26013, by 37, take the euclidean leftover and restart with the result of the division until we reach 0.
 
-TODO
+$26013 = 703 * 37 + 2 \leftarrow c
+\\ 703 = 19 * 37 + 0 \leftarrow a
+\\ 19 = 0 * 37 + 19 \leftarrow t$
 
 T​he leftovers are the letter indexes in the alphabet: 2, 0, 19. The numbers on StarkNet are represented by felts, the abbreviation for field elements. The Field is of size P with:
 
-TODO
+$P=3618502788666131213697322783095070105623107215331596699973092056135872020481 
+\\
+37^{49} < P < 37^{50}$
 
 This means that, depending on the characters chosen, encodings of up to 49 or 50 characters can be stored within a single felt. That is largely sufficient for domain names, but this method has two drawbacks.
 
@@ -54,17 +58,19 @@ We have found a solution to address these drawbacks. Our word will be encoded in
 
 Encoding is the same as with a simple alphabet of size 38.
 
-TODO
+$cat = 2*38^0 + 0*38^1 + 19*38^2 = 27438$
 
 ​Same with decoding.
 
-TODO
+$26013 = 722 * 38 + 2
+\\ 703 = 19 * 37 + 0
+\\ 19 = 0 * 38 + 19$
 
 **Example: a word using extended alphabet**
 
 You can notice the characters are prefixed by `37*38^i` to indicate the switch to the extended wallet. The first character index is 0, but we add 1 because it is the first character so the alphabet is prefixed by a.
 
-TODO
+$这来 = 37 * 38ˆ0 + (0+1) * (38ˆ0 * 2^1) + 37* (38ˆ1 * 2) + 1 * (38ˆ1 * 2^2)= 3003$
 
 **Conclusion**
 
