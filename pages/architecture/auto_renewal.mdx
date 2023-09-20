@@ -1,1 +1,54 @@
+import { Bleed } from "nextra-theme-docs";
+
 # Automatic Renewal
+
+The Automatic Renewal system of StarknetID ensures a hassle-free domain renewal process for users on the Starknet network. By leveraging an immutable smart contract, users can rest assured that their domains will be renewed seamlessly, without the burden of handling transaction costs.
+
+[🔗 View the source code on GitHub](https://github.com/starknet-id/auto_renew_contract)
+
+## Overview
+
+Upon enabling automatic renewal, StarknetID promises the following:
+
+- **No hidden fees**: You are only charged for the domain renewal. Transaction fees are taken care of by StarknetID.
+- **Full control**: You can deactivate this feature anytime you wish.
+- **Maximum security**: The smart contract governing the process is immutable, which means it can't be altered, ensuring utmost reliability and security.
+
+Here's how it works:
+
+- Users authorize the smart contract to spend their funds for domain renewal.
+- A StarknetID-controlled bot interacts with this contract, using user funds to renew domains.
+- StarknetID bears the transaction costs on the blockchain.
+
+## Key Guarantees
+
+The smart contract provides the following guarantees:
+
+1. **Dedicated Purpose**: Funds will only be used for renewing the domains you have specified.
+2. **Charge Limit**: The maximum you can be charged is up to a predetermined limit set by you.
+3. **Annual Renewal**: You can only be charged once in a year.
+4. **Expiration-Driven Renewal**: Renewals will only happen if the domain is nearing expiration (less than a month left).
+
+## Technical Insights
+
+Let's delve into some technical aspects of the automatic renewal contract:
+
+### 1. Renewal of Non-owned Domains
+
+This feature lets you renew domains even if they're controlled by a smart contract. It's especially handy if you wish to maintain control over the renewal payments, while the domain is governed by a smart contract.
+
+### 2. Multiple Spending Flows
+
+Flexibility is at the core. You can set up multiple spending streams for various domains or even a single domain. However, even if you have multiple flows directed towards the same domain, it will be renewed only once a year, ensuring no overcharging.
+
+### 3. Deactivation Parameters
+
+To halt a spending flow, it's essential to use the account that initiated it. The original domain and `limit_price` must be provided. Events are emitted for users to easily track their allowances and manage them effortlessly.
+
+### 4. Spending Capacity
+
+The `limit_price`, or spending capacity, determines the amount deducted from your account. Even if the actual renewal is cheaper, the full `limit_price` amount will be used. Though there's a provision to reclaim overpaid funds, it's not a guaranteed feature and is generally discouraged for trivial amounts.
+
+### 5. Admin Control
+
+The contract is under the stewardship of an admin who can permanently halt all renewals — a measure in place for extreme scenarios, like a detected vulnerability. The admin also has authority over the renewer account – the only account permitted to renew domains on behalf of others. This renewer needs StarknetID's trust, especially since it dictates the `tax_price`. If compromised, while the renewer would continue its function, the tax funds might not reach StarknetID.
