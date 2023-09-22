@@ -103,7 +103,7 @@ Retrieves the address corresponding to the provided StarkName.
 **Example usage**:
 
 ```tsx
-const address = starknetIdNavigator.getAddressFromStarkName("test.stark");
+const address = await starknetIdNavigator.getAddressFromStarkName("test.stark");
 ```
 
 #### getStarkName
@@ -125,7 +125,7 @@ A `Promise`\<`string`\> representing the domain. Throws an error if the address 
 **Example usage**:
 
 ```tsx
-const domain = starknetIdNavigator.getStarkName(
+const domain = await starknetIdNavigator.getStarkName(
   "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3"
 );
 ```
@@ -149,14 +149,14 @@ A `Promise`\<`number`\> representing the id. Throws an error if the domain is in
 **Example usage**:
 
 ```tsx
-const domain = starknetIdNavigator.getStarknetId("fricoben.stark");
+const id = await starknetIdNavigator.getStarknetId("fricoben.stark");
 ```
 
 ### Resolving user data
 
 #### getUserData
 
-Get user data from starknet id or domain.
+Get user data from starknet id, domain or address.
 
 ▸ StarknetIdNavigator.**getUserData**(`idDomainOrAddr`: `number | string`, `field`: `string`)
 => `Promise`\<`BigInt`\>
@@ -174,8 +174,7 @@ A `Promise`\<`BigInt`\> representing the user data. Throws an error if the idDom
 
 #### getExtentedUserData
 
-Get user data from starknet id or domain. Use this function to retrieve an array
-knowing its size. It will return zeros if not written.
+Get user data from starknet id, address or domain. Use this function to retrieve an array knowing its size. It will return zeros if not written.
 
 ▸ StarknetIdNavigator.**getExtentedUserData**(`idOrDomain`: `number` | `string`, `field`:
 string`, `length`: `number`) => `Promise`\<`BigInt[]`\>
@@ -194,7 +193,7 @@ A `Promise`\<`BigInt[]`\> representing the user extended data. Throws an error i
 
 #### getUnboundedUserData
 
-Get User unbounded data from starknet id or domain. Use this function to retrieve an array up to zero (not included).
+Get User unbounded data from starknet id, address or domain. Use this function to retrieve an array up to zero (not included).
 
 ▸ StarknetIdNavigator.**getUnboundedUserData**(`idDomainOrAddr`: `number` | `string`, `field`:
 `string`) => `Promise`\<`BigInt[]`\>
@@ -214,9 +213,7 @@ A `Promise`\<`BigInt[]`\> representing the user unbounded data. Throws an error 
 
 #### getVerifierData
 
-Get verifier data from starknet id or domain. If no verifier contract is
-provided, it will return the starknet.id verifier contract address deployed on
-the StarknetIdNavigator provider chain id.
+Get verifier data from starknet id, address or domain. If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
 
 ▸ StarknetIdNavigator.**getVerifierData**(`idDomainOrAddr`: `number` | `string`, `field`:
 `string`, `verifier`?: `string`) => `Promise`\<`BigInt`\>
@@ -241,12 +238,15 @@ A `Promise`\<`BigInt[]`\> representing the user verifier data.
 **Example usage**:
 
 ```tsx
-const domain = starknetIdNavigator.getVerifierData("fricoben.stark", "discord");
+const data = await starknetIdNavigator.getVerifierData(
+  "fricoben.stark",
+  "discord"
+);
 ```
 
 #### getExtendedVerifierData
 
-Get extended verifier data from starknet id or domain. Use this function to retrieve an array knowing its size. It will return zeros if not written. If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
+Get extended verifier data from starknet id, address or domain. Use this function to retrieve an array knowing its size. It will return zeros if not written. If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
 
 ▸ StarknetIdNavigator.**getExtendedVerifierData**(`idDomainOrAddr`: `number` | `string`,
 `field`: `string`, `length`: `number`, `verifier`?: `string`) => `Promise`\<`BigInt[]`\>
@@ -272,7 +272,7 @@ A `Promise`\<`BigInt[]`\> representing the user extended verifier data. Throws a
 **Example usage**:
 
 ```tsx
-const domain = starknetIdNavigator.getExtendedVerifierData(
+const data = await starknetIdNavigator.getExtendedVerifierData(
   "fricoben.stark",
   "discord",
   1
@@ -281,7 +281,7 @@ const domain = starknetIdNavigator.getExtendedVerifierData(
 
 #### getUnboundedVerifierData
 
-Get User unbounded data from starknet id or domain. Use this function to retrieve an array up to zero (not included). If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
+Get User unbounded data from starknet id, address or domain. Use this function to retrieve an array up to zero (not included). If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
 
 ▸ StarknetIdNavigator.**getUnboundedVerifierData**(`idDomainOrAddr`: `number` | `string`,
 `field`: `string`, `verifier`?: `string`) => `Promise`\<`BigInt[]`\>
@@ -305,28 +305,29 @@ A `Promise`\<`BigInt[]`\> representing the user unbounded verifier data. Throws 
 
 ### Utils
 
-#### decodeDomain
+#### Encoding and Decoding
 
-Decode starknetid domain represented as an array of bigint `[454245]` -> `test.stark`
+##### decodeDomain
+
+Converts an encoded Starknet ID domain represented as an array of big integers into a string representation.
 
 ▸ utils.**decodeDomain**(`encoded`: `BigInt`[]) => `string`
 
 **Parameters**
 
-| Name      | Type       | Description              |
-| :-------- | :--------- | :----------------------- |
-| `encoded` | `BigInt`[] | Encoded domain to decode |
+| Name      | Type       | Description                     |
+| :-------- | :--------- | :------------------------------ |
+| `encoded` | `BigInt`[] | Array of big integers to decode |
 
 **Returns**:
 
-A `string` representing the domain.
+A `string` representing the decoded domain.
 
-#### encodeDomain
+##### encodeDomain
+
+Convert a domain or subdomain to its encoded form as an array of big integers.
 
 ▸ utils.**encodeDomain**(`domain`: `string` | `undefined` | `null`) => `BigInt`[]
-
-Encode starknetid domains and subdomains to an array bigint `test.stark` ->
-`[454245]`
 
 **Parameters**
 
@@ -336,11 +337,13 @@ Encode starknetid domains and subdomains to an array bigint `test.stark` ->
 
 **Returns**:
 
-A `BigInt[]` representing the domain encoded.
+A `BigInt[]` representing the encoded domain.
 
-#### isStarkDomain
+#### Domain Type Checks
 
-Check if domain is starknet.id domain
+##### isStarkDomain
+
+Checks if a domain is a Starknet ID domain.
 
 ▸ utils.**isStarkDomain**(`domain`: `string`) => `boolean`
 
@@ -354,9 +357,9 @@ Check if domain is starknet.id domain
 
 A `boolean` representing if the domain is a .stark domain.
 
-#### isStarkRootDomain
+##### isStarkRootDomain
 
-Check if domain is a starknet.id root domain
+Checks if a domain is a Starknet ID root domain.
 
 ▸ utils.**isStarkRootDomain**(`domain`: `string` | `undefined`) => `boolean`
 
@@ -370,9 +373,9 @@ Check if domain is a starknet.id root domain
 
 A `boolean` representing if the domain is a .stark root domain.
 
-#### isSubdomain
+##### isSubdomain
 
-Check if domain is a starknet.id subdomain
+Checks if a domain is a Starknet ID subdomain.
 
 ▸ utils.**isSubdomain**(`domain`: `string` | `undefined`) => `boolean`
 
@@ -386,9 +389,9 @@ Check if domain is a starknet.id subdomain
 
 A `boolean` representing if the domain is a .stark subdomain.
 
-#### isBraavosSubdomain
+##### isBraavosSubdomain
 
-Check if domain is a Braavos subdomain
+Checks if domain is a Braavos subdomain.
 
 ▸ utils.**isBraavosSubdomain**(`domain`: `string` | `undefined`) => `boolean`
 
@@ -402,9 +405,9 @@ Check if domain is a Braavos subdomain
 
 A `boolean` representing if the domain is a Braavos subdomain.
 
-#### isXplorerSubdomain
+##### isXplorerSubdomain
 
-Check if domain is a Xplorer subdomain
+Checks if domain is a Xplorer subdomain
 
 ▸ utils.**isXplorerSubdomain**(`domain`: `string` | `undefined`) => `boolean`
 
@@ -418,9 +421,11 @@ Check if domain is a Xplorer subdomain
 
 A `boolean` representing if the domain is a Xplorer subdomain.
 
-#### getNamingContract
+#### Contract Address Retrieval
 
-Get starknet.id naming contract address from chainId. If contract is not deployed will throw an error.
+##### getNamingContract
+
+Retrieve the Starknet ID naming contract address based on the chain ID.
 
 ▸ utils.**getNamingContract**(`chainId`: `StarknetChainId`) => `string`
 
@@ -434,9 +439,9 @@ Get starknet.id naming contract address from chainId. If contract is not deploye
 
 A `string` representing the naming contract address.
 
-#### getIdentityContract
+##### getIdentityContract
 
-Get starknet.id identity contract address from chainId. If contract is not deployed will throw an error.
+Retrieve the Starknet ID identity contract address based on the chain ID.
 
 ▸ utils.**getIdentityContract**(`chainId`: `StarknetChainId`) => `string`
 
@@ -450,9 +455,9 @@ Get starknet.id identity contract address from chainId. If contract is not deplo
 
 A `string` representing the identity contract address.
 
-#### getVerifierContract
+##### getVerifierContract
 
-Get starknet.id verifier contract address from chainId. If contract is not deployed will throw an error. At the moment, starknet.id verifier contract only support `Discord`, `Twitter` and `Github` fields.
+Retrieve the Starknet ID verifier contract address based on the chain ID.
 
 ▸ utils.**getVerifierContract**(`chainId`: `StarknetChainId`) => `string`
 
