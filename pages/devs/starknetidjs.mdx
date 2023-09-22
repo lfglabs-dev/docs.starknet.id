@@ -1,0 +1,467 @@
+# Starknetid.js
+
+Starknetid.js is a JavaScript library that facilitates interaction with the Starknet ID protocol. Whether you're a dApp developer or a blockchain enthusiast, this library provides utility functions to seamlessly integrate Starknet ID into your projects.
+
+[🔗 View the source code on GitHub](https://github.com/starknet-id/starknetid.js)
+
+## Installation
+
+```bash
+# using npm
+npm install starknetid.js starknet@next
+
+# using yarn
+yarn install starknetid.js starknet@next
+```
+
+**Note**: The latest version of `starknetid.js` is compatible with `starknet@1.5.3`. For older versions, use `starknetid.js@0.1.5`.
+
+## Usage for dApp developers
+
+#### Basic usage
+
+Import `StarknetIdNavigator` to access various Starknet ID functions. Initialize it with a **provider** and a **chain ID**.
+
+##### With Starknet.js
+
+```tsx
+import { StarknetIdNavigator } from "starknetid.js";
+import { Provider, constants } from "starknet";
+
+const provider = new Provider();
+const starknetIdNavigator = new StarknetIdNavigator(
+  provider,
+  constants.StarknetChainId.SN_MAIN
+);
+const addr = await starknetIdNavigator.getAddressFromStarkName("test.stark");
+```
+
+##### With Starknet-react
+
+```tsx
+import { StarknetIdNavigator } from "starknetid.js";
+import { useProvider, useNetwork, useAccount } from "starknet";
+import { constants } from "starknet";
+
+const { provider } = useProvider();
+const { chain } = useNetwork();
+const { address } = useAccount();
+const starknetIdNavigator = new StarknetIdNavigator(
+  provider,
+  chain.id as constants.StarknetChainId
+);
+const starkname = await starknetIdNavigator.getStarkName(address ?? "");
+```
+
+#### Using custom contracts
+
+You can also use `starknetid.js` with your custom naming and identity contracts.
+
+```tsx
+import { StarknetIdNavigator } from "starknetid.js";
+
+const starknetIdNavigator = new StarknetIdNavigator(
+  provider,
+  constants.StarknetChainId.SN_MAIN,
+  {
+    naming: customNamingContract,
+    identity: customIdentityContract,
+  }
+);
+```
+
+#### Util functions
+
+Utility functions can be accessed directly through the `utils` namespace.
+
+```tsx
+import { utils } from "starknetid.js";
+
+const encodedDomain = utils.encodeDomain("test.stark");
+```
+
+## SDK
+
+### Resolving domains
+
+#### getAddressFromStarkName
+
+Retrieves the address corresponding to the provided StarkName.
+
+▸ StarknetIdNavigator.**getAddressFromStarkName**(`domain`: `string`) => `Promise`\<`string`\>
+
+**Parameters**:
+
+| Name     | Type     | Description              |
+| :------- | :------- | :----------------------- |
+| `domain` | `string` | The StarkName to resolve |
+
+**Returns**:
+
+`Promise`\<`string`\> representing the address as hexadecimal. Throws an error if the domain is invalid.
+
+**Example usage**:
+
+```tsx
+const address = starknetIdNavigator.getAddressFromStarkName("test.stark");
+```
+
+#### getStarkName
+
+Get Starkname from address.
+
+▸ StarknetIdNavigator.**getStarkName**(`address`: `string`) => `Promise`\<`string`\>
+
+**Parameters**:
+
+| Name      | Type     | Description            |
+| :-------- | :------- | :--------------------- |
+| `address` | `string` | The address to resolve |
+
+**Returns**:
+
+A `Promise`\<`string`\> representing the domain. Throws an error if the address is invalid.
+
+**Example usage**:
+
+```tsx
+const domain = starknetIdNavigator.getStarkName(
+  "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3"
+);
+```
+
+#### getStarknetId
+
+Get Starknet id from domain.
+
+▸ StarknetIdNavigator.**getStarknetId**(`domain`: `string`) => `Promise`\<`number`\>
+
+**Parameters**:
+
+| Name     | Type     | Description           |
+| :------- | :------- | :-------------------- |
+| `domain` | `string` | The domain to resolve |
+
+**Returns**:
+
+A `Promise`\<`number`\> representing the id. Throws an error if the domain is invalid.
+
+**Example usage**:
+
+```tsx
+const domain = starknetIdNavigator.getStarknetId("fricoben.stark");
+```
+
+### Resolving user data
+
+#### getUserData
+
+Get user data from starknet id or domain.
+
+▸ StarknetIdNavigator.**getUserData**(`idDomainOrAddr`: `number | string`, `field`: `string`)
+=> `Promise`\<`BigInt`\>
+
+**Parameters**:
+
+| Name             | Type                 | Description                                                  |
+| :--------------- | :------------------- | :----------------------------------------------------------- |
+| `idDomainOrAddr` | `number` \| `string` | starknet id (number), domain or hexadecimal address (string) |
+| `field`          | `string`             | The field to fetch                                           |
+
+**Returns**:
+
+A `Promise`\<`BigInt`\> representing the user data. Throws an error if the idDomainOrAddr is invalid.
+
+#### getExtentedUserData
+
+Get user data from starknet id or domain. Use this function to retrieve an array
+knowing its size. It will return zeros if not written.
+
+▸ StarknetIdNavigator.**getExtentedUserData**(`idOrDomain`: `number` | `string`, `field`:
+string`, `length`: `number`) => `Promise`\<`BigInt[]`\>
+
+**Parameters**:
+
+| Name         | Type                 | Description                 |
+| :----------- | :------------------- | :-------------------------- |
+| `idOrDomain` | `number` \| `string` | The domain or id to resolve |
+| `field`      | `string`             | The field to fetch          |
+| `length`     | `number`             | Size of field to fetch      |
+
+**Returns**:
+
+A `Promise`\<`BigInt[]`\> representing the user extended data. Throws an error if the idDomainOrAddr is invalid.
+
+#### getUnboundedUserData
+
+Get User unbounded data from starknet id or domain. Use this function to retrieve an array up to zero (not included).
+
+▸ StarknetIdNavigator.**getUnboundedUserData**(`idDomainOrAddr`: `number` | `string`, `field`:
+`string`) => `Promise`\<`BigInt[]`\>
+
+**Parameters**:
+
+| Name             | Type                 | Description                                                  |
+| :--------------- | :------------------- | :----------------------------------------------------------- |
+| `idDomainOrAddr` | `number` \| `string` | starknet id (number), domain or hexadecimal address (string) |
+| `field`          | `string`             | The field to fetch                                           |
+
+**Returns**:
+
+A `Promise`\<`BigInt[]`\> representing the user unbounded data. Throws an error if the idDomainOrAddr is invalid.
+
+### Resolving verifier data
+
+#### getVerifierData
+
+Get verifier data from starknet id or domain. If no verifier contract is
+provided, it will return the starknet.id verifier contract address deployed on
+the StarknetIdNavigator provider chain id.
+
+▸ StarknetIdNavigator.**getVerifierData**(`idDomainOrAddr`: `number` | `string`, `field`:
+`string`, `verifier`?: `string`) => `Promise`\<`BigInt`\>
+
+**Parameters**:
+
+| Name             | Type                 | Description                                                  |
+| :--------------- | :------------------- | :----------------------------------------------------------- |
+| `idDomainOrAddr` | `number` \| `string` | starknet id (number), domain or hexadecimal address (string) |
+| `field`          | `string`             | The field to fetch                                           |
+| `verifier?`      | `string`             | Optional verifier contract address                           |
+
+**Returns**:
+
+A `Promise`\<`BigInt[]`\> representing the user verifier data.
+
+**Errors**:
+
+- Throws an error if the idDomainOrAddr is invalid.
+- Returns `0x0` when field in custom verifier contract does not exist or id does not exists.
+
+**Example usage**:
+
+```tsx
+const domain = starknetIdNavigator.getVerifierData("fricoben.stark", "discord");
+```
+
+#### getExtendedVerifierData
+
+Get extended verifier data from starknet id or domain. Use this function to retrieve an array knowing its size. It will return zeros if not written. If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
+
+▸ StarknetIdNavigator.**getExtendedVerifierData**(`idDomainOrAddr`: `number` | `string`,
+`field`: `string`, `length`: `number`, `verifier`?: `string`) => `Promise`\<`BigInt[]`\>
+
+**Parameters**:
+
+| Name             | Type                 | Description                                                  |
+| :--------------- | :------------------- | :----------------------------------------------------------- |
+| `idDomainOrAddr` | `number` \| `string` | starknet id (number), domain or hexadecimal address (string) |
+| `field`          | `string`             | The field to fetch                                           |
+| `length`         | `number`             | The size of the field                                        |
+| `verifier?`      | `string`             | Optional verifier contract address                           |
+
+**Returns**:
+
+A `Promise`\<`BigInt[]`\> representing the user extended verifier data. Throws an error if the idDomainOrAddr is invalid.
+
+**Errors**:
+
+- Throws an error if the idDomainOrAddr is invalid.
+- Returns `0x0` when field in custom verifier contract does not exist or id does not exists.
+
+**Example usage**:
+
+```tsx
+const domain = starknetIdNavigator.getExtendedVerifierData(
+  "fricoben.stark",
+  "discord",
+  1
+);
+```
+
+#### getUnboundedVerifierData
+
+Get User unbounded data from starknet id or domain. Use this function to retrieve an array up to zero (not included). If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
+
+▸ StarknetIdNavigator.**getUnboundedVerifierData**(`idDomainOrAddr`: `number` | `string`,
+`field`: `string`, `verifier`?: `string`) => `Promise`\<`BigInt[]`\>
+
+**Parameters**:
+
+| Name             | Type                 | Description                                                  |
+| :--------------- | :------------------- | :----------------------------------------------------------- |
+| `idDomainOrAddr` | `number` \| `string` | starknet id (number), domain or hexadecimal address (string) |
+| `field`          | `string`             | The field to fetch                                           |
+| `verifier?`      | `string`             | Optional verifier contract address                           |
+
+**Returns**:
+
+A `Promise`\<`BigInt[]`\> representing the user unbounded verifier data. Throws an error if the idDomainOrAddr is invalid.
+
+**Errors**:
+
+- Throws an error if the idDomainOrAddr is invalid.
+- Returns `0x0` when field in custom verifier contract does not exist or id does not exists.
+
+### Utils
+
+#### decodeDomain
+
+Decode starknetid domain represented as an array of bigint `[454245]` -> `test.stark`
+
+▸ utils.**decodeDomain**(`encoded`: `BigInt`[]) => `string`
+
+**Parameters**
+
+| Name      | Type       | Description              |
+| :-------- | :--------- | :----------------------- |
+| `encoded` | `BigInt`[] | Encoded domain to decode |
+
+**Returns**:
+
+A `string` representing the domain.
+
+#### encodeDomain
+
+▸ utils.**encodeDomain**(`domain`: `string` | `undefined` | `null`) => `BigInt`[]
+
+Encode starknetid domains and subdomains to an array bigint `test.stark` ->
+`[454245]`
+
+**Parameters**
+
+| Name     | Type                              | Description      |
+| :------- | :-------------------------------- | :--------------- |
+| `domain` | `string` \| `undefined` \| `null` | domain to encode |
+
+**Returns**:
+
+A `BigInt[]` representing the domain encoded.
+
+#### isStarkDomain
+
+Check if domain is starknet.id domain
+
+▸ utils.**isStarkDomain**(`domain`: `string`) => `boolean`
+
+**Parameters**
+
+| Name     | Type     | Description     |
+| :------- | :------- | :-------------- |
+| `domain` | `string` | domain to check |
+
+**Returns**:
+
+A `boolean` representing if the domain is a .stark domain.
+
+#### isStarkRootDomain
+
+Check if domain is a starknet.id root domain
+
+▸ utils.**isStarkRootDomain**(`domain`: `string` | `undefined`) => `boolean`
+
+**Parameters**
+
+| Name     | Type                    | Description     |
+| :------- | :---------------------- | :-------------- |
+| `domain` | `string` \| `undefined` | domain to check |
+
+**Returns**:
+
+A `boolean` representing if the domain is a .stark root domain.
+
+#### isSubdomain
+
+Check if domain is a starknet.id subdomain
+
+▸ utils.**isSubdomain**(`domain`: `string` | `undefined`) => `boolean`
+
+**Parameters**
+
+| Name     | Type                    | Description     |
+| :------- | :---------------------- | :-------------- |
+| `domain` | `string` \| `undefined` | domain to check |
+
+**Returns**:
+
+A `boolean` representing if the domain is a .stark subdomain.
+
+#### isBraavosSubdomain
+
+Check if domain is a Braavos subdomain
+
+▸ utils.**isBraavosSubdomain**(`domain`: `string` | `undefined`) => `boolean`
+
+**Parameters**
+
+| Name     | Type                    | Description     |
+| :------- | :---------------------- | :-------------- |
+| `domain` | `string` \| `undefined` | domain to check |
+
+**Returns**:
+
+A `boolean` representing if the domain is a Braavos subdomain.
+
+#### isXplorerSubdomain
+
+Check if domain is a Xplorer subdomain
+
+▸ utils.**isXplorerSubdomain**(`domain`: `string` | `undefined`) => `boolean`
+
+**Parameters**
+
+| Name     | Type                    | Description     |
+| :------- | :---------------------- | :-------------- |
+| `domain` | `string` \| `undefined` | domain to check |
+
+**Returns**:
+
+A `boolean` representing if the domain is a Xplorer subdomain.
+
+#### getNamingContract
+
+Get starknet.id naming contract address from chainId. If contract is not deployed will throw an error.
+
+▸ utils.**getNamingContract**(`chainId`: `StarknetChainId`) => `string`
+
+**Parameters**
+
+| Name      | Type              | Description                              |
+| :-------- | :---------------- | :--------------------------------------- |
+| `chainId` | `StarknetChainId` | chain on which the contract was deployed |
+
+**Returns**:
+
+A `string` representing the naming contract address.
+
+#### getIdentityContract
+
+Get starknet.id identity contract address from chainId. If contract is not deployed will throw an error.
+
+▸ utils.**getIdentityContract**(`chainId`: `StarknetChainId`) => `string`
+
+**Parameters**
+
+| Name      | Type              | Description                              |
+| :-------- | :---------------- | :--------------------------------------- |
+| `chainId` | `StarknetChainId` | chain on which the contract was deployed |
+
+**Returns**:
+
+A `string` representing the identity contract address.
+
+#### getVerifierContract
+
+Get starknet.id verifier contract address from chainId. If contract is not deployed will throw an error. At the moment, starknet.id verifier contract only support `Discord`, `Twitter` and `Github` fields.
+
+▸ utils.**getVerifierContract**(`chainId`: `StarknetChainId`) => `string`
+
+**Parameters**
+
+| Name      | Type              | Description                              |
+| :-------- | :---------------- | :--------------------------------------- |
+| `chainId` | `StarknetChainId` | chain on which the contract was deployed |
+
+**Returns**:
+
+A `string` representing the verifier contract address.

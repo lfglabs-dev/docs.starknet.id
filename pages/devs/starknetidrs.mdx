@@ -1,0 +1,226 @@
+# Starknetid.rs
+
+Starknetid.rs is a Rust library designed to simplify interactions with the Starknet ID protocol. It comes packed with a range of utility functions, making it easier to integrate Starknet ID into your Rust projects.
+
+[🔗 View the source code on GitHub](https://github.com/starknet-id/starknetid.rs)
+
+## Installation
+
+Add `starknet.rs` and `starnetid.rs` into your Cargo.toml file:
+
+```toml
+[dependencies]
+starknet = "0.6.0"
+starknet-id = { git = "https://github.com/starknet-id/starknet-id.rs.git", branch = "master" }
+```
+
+## Functions
+
+### domain_to_address
+
+Fetches the address corresponding to a given stark domain name.
+
+▸ **domain_to_address**(`domain`, `contract_addr`): `Result`\<`FieldElement`, `ResolvingError`\>
+
+**Parameters**
+
+| Name            | Type           | Description                    |
+| :-------------- | :------------- | ------------------------------ |
+| `domain`        | `&str`         | The domain to look up          |
+| `contract_addr` | `FieldElement` | Naming contract address to use |
+
+**Returns**
+
+Returns a `Result` wrapping either the corresponding address as a `FieldElement` or a `ResolvingError`.
+
+**Defined in**
+
+[src/resolving.rs:28](https://github.com/starknet-id/starknetid.rs/blob/master/src/resolving.rs#L28)
+
+**Example usage**
+
+This exemple shows how to retrieve the address corresponding to a given domain.
+
+```rust
+use starknet::{
+    core::types::FieldElement,
+    providers::{jsonrpc::HttpTransport, JsonRpcClient},
+};
+use starknet_id::{
+    naming::{ResolvingError, GOERLI_CONTRACT},
+    ProviderExt,
+};
+use url::Url;
+
+fn create_jsonrpc_client() -> JsonRpcClient<HttpTransport> {
+    let rpc_url =
+        std::env::var("STARKNET_RPC").unwrap_or("https://rpc-goerli-1.starknet.rs/rpc/v0.4".into());
+    JsonRpcClient::new(HttpTransport::new(Url::parse(&rpc_url).unwrap()))
+}
+
+#[tokio::main]
+async fn main() {
+    let client_goerli = create_jsonrpc_client();
+    let addr = client_goerli
+        .domain_to_address("th0rgal.stark", GOERLI_CONTRACT)
+        .await;
+    match addr {
+        Ok(addr) => println!("address: {}", addr),
+        Err(err) => match err {
+            ResolvingError::ConnectionError(cause) => println!("Connection error: {}", cause),
+            ResolvingError::InvalidContractResult => println!("Invalid contract result"),
+            ResolvingError::InvalidDomain => println!("Invalid domain"),
+            ResolvingError::NotSupported => println!("Resolving not supported"),
+        },
+    }
+}
+```
+
+---
+
+### address_to_domain
+
+Fetches the domain corresponding to a given address.
+
+▸ **address_to_domain**(`address`, `contract_addr`): `Result`\<`String`, `ResolvingError`\>
+
+**Parameters**
+
+| Name            | Type           | Description                    |
+| :-------------- | :------------- | ------------------------------ |
+| `address`       | `FieldElement` | The address to look up         |
+| `contract_addr` | `FieldElement` | Naming contract address to use |
+
+**Returns**
+
+Returns a `Result` wrapping either the corresponding domain as a `String` or a `ResolvingError`.
+
+**Defined in**
+
+[src/resolving.rs:62](https://github.com/starknet-id/starknetid.rs/blob/master/src/resolving.rs#L62)
+
+**Example usage**
+
+This exemple shows how to retrieve the stark name corresponding to a given address.
+
+```rust
+use starknet::{
+    core::types::FieldElement,
+    providers::{jsonrpc::HttpTransport, JsonRpcClient},
+};
+use starknet_id::{
+    naming::{ResolvingError, GOERLI_CONTRACT},
+    ProviderExt,
+};
+use url::Url;
+
+fn create_jsonrpc_client() -> JsonRpcClient<HttpTransport> {
+    let rpc_url =
+        std::env::var("STARKNET_RPC").unwrap_or("https://rpc-goerli-1.starknet.rs/rpc/v0.4".into());
+    JsonRpcClient::new(HttpTransport::new(Url::parse(&rpc_url).unwrap()))
+}
+
+#[tokio::main]
+async fn main() {
+    let client_goerli = create_jsonrpc_client();
+    let domain_result = client_goerli
+        .address_to_domain(
+            FieldElement::from_hex_be(
+                "0x048F24D0D0618fa31813DB91a45d8be6c50749e5E19ec699092CE29aBe809294",
+            )
+            .unwrap(),
+            GOERLI_CONTRACT,
+        )
+        .await;
+    match domain_result {
+        Ok(domain_result) => println!("domain: {}", domain_result),
+        Err(err) => match err {
+            ResolvingError::ConnectionError(cause) => println!("Connection error: {}", cause),
+            ResolvingError::InvalidContractResult => println!("Invalid contract result"),
+            ResolvingError::InvalidDomain => println!("Invalid domain"),
+            ResolvingError::NotSupported => println!("Resolving not supported"),
+        },
+    }
+}
+```
+
+---
+
+### encode
+
+Encodes a domain name into a `FieldElement`. Note: Exclude the `.stark` suffix when passing the domain name.
+
+▸ **encode**(`domain`): `Result`\<`FieldElement`, `EncodingError`\>
+
+**Parameters**
+
+| Name     | Type   | Description          |
+| :------- | :----- | -------------------- |
+| `domain` | `&str` | The domain to encode |
+
+**Returns**
+
+Returns a `Result` wrapping either the corresponding domain encoded as a `FieldElement` or a `EncodingError`.
+
+**Defined in**
+
+[src/encoding.rs:24](https://github.com/starknet-id/starknetid.rs/blob/master/src/encoding.rs#L24)
+
+**Example usage**
+
+This exemple shows how to encode a domain into a FieldElement:
+
+```rust
+use starknet::core::types::FieldElement;
+use starknet_id::{encode, encoding::EncodingError};
+
+#[tokio::main]
+async fn main() {
+    let domain_name = "fricoben";
+    let domain_encoded = encode(domain_name);
+    match domain_encoded {
+        Ok(domain) => println!(domain), // Output: 1499554868251
+        Err(err) => match err {
+            EncodingError::UnkwnownCharacter(char) => println!("Encoding error at character: {}", char),
+        },
+    }
+}
+```
+
+---
+
+### decode
+
+This function decodes a stark name from a FieldElement.
+
+▸ **decode**(`domain`): `String`
+
+**Parameters**
+
+| Name     | Type           | Description          |
+| :------- | :------------- | -------------------- |
+| `domain` | `FieldElement` | The domain to decode |
+
+**Returns**
+
+A `String` containing the decoded domain.
+
+**Defined in**
+
+[src/encoding.rs:110](https://github.com/starknet-id/starknetid.rs/blob/master/src/encoding.rs#L110)
+
+**Example usage**
+
+This exemple shows how to decode a domain into a String:
+
+```rust
+use starknet::core::types::FieldElement;
+use starknet_id::decode;
+
+#[tokio::main]
+async fn main() {
+    let domain_encoded = FieldElement::from_dec_str("1499554868251").unwrap();
+    let domain = decode(domain_encoded);
+    println!(domain); // Output: fricoben
+}
+```

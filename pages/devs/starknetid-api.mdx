@@ -1,0 +1,126 @@
+# API domain integration
+
+How to resolve a domain or an address using the indexer
+
+[🔗 View the source code on GitHub](https://github.com/starknet-id/api.starknet.id)
+
+## Endpoints
+
+### Domain to Address
+
+Retrieve the associated address and its expiry date for a given domain.
+
+**Method & URL**
+
+- HTTP Method: `GET`
+- API URL: `https://api.starknet.id/domain_to_addr`
+
+**Query Parameters**
+
+| Name     | Type     | Description         |
+| :------- | :------- | ------------------- |
+| `domain` | `string` | The domain to query |
+
+**Response**
+
+The API will return the associated address along with its expiry date.
+
+**Example request**
+
+`https://api.starknet.id/domain_to_addr?domain=fricoben.stark`
+
+**Success Response Example**
+
+```json
+{
+  "addr": "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3",
+  "domain_expiry": 1796569200
+}
+```
+
+**Error Response Example**
+
+```
+no address found
+```
+
+---
+
+### Address to Domain
+
+Retrieve the associated domain and its expiry date for a given address.
+
+**Method & URL**
+
+- HTTP Method: `GET`
+- API URL: `https://api.starknet.id/addr_to_domain`
+
+**Query Parameters**
+
+| Name   | Type     | Description          |
+| :----- | :------- | -------------------- |
+| `addr` | `string` | The address to query |
+
+**Response**
+
+The API will return the associated domain along with its expiry date.
+
+**Example request**
+
+`https://api.starknet.id/addr_to_domain?addr=0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3`
+
+**Success Response Example**
+
+```json
+{
+  "domain": "fricoben.stark",
+  "domain_expiry": 1796569200
+}
+```
+
+**Error Response Example**
+
+```
+No domain found
+```
+
+---
+
+### Address to External Domains
+
+Retrieve the braavos and xplorer subdomain associated to an address.
+
+**Method & URL**
+
+- HTTP Method: `GET`
+- API URL: `https://api.starknet.id/addr_to_external_domains`
+
+**Query Parameters**
+
+| Name   | Type     | Description          |
+| :----- | :------- | -------------------- |
+| `addr` | `string` | The address to query |
+
+**Response**
+
+The API will return the associated braavos and xplorer subdomains.
+
+**Example request**
+
+`https://api.starknet.id/addr_to_domain?addr=0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3`
+
+**Success Response Example**
+
+```json
+{
+  "domains": ["fricoben.braavos.stark"]
+}
+```
+
+**Empty Response Example**
+
+```
+{
+  "domains":[]
+}
+```
