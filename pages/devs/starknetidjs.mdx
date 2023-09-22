@@ -1,6 +1,6 @@
 # Starknetid.js
 
-Starknetid.js is a JavaScript library that facilitates interaction with the Starknet ID protocol. Whether you're a dApp developer or a blockchain enthusiast, this library provides utility functions to seamlessly integrate Starknet ID into your projects.
+Starknetid.js is a JavaScript library that facilitates interaction with the Starknet.id protocol. Whether you're a dApp developer or a blockchain enthusiast, this library provides utility functions to seamlessly integrate Starknet.id into your projects.
 
 [🔗 View the source code on GitHub](https://github.com/starknet-id/starknetid.js)
 
@@ -20,7 +20,7 @@ yarn install starknetid.js starknet@next
 
 #### Basic usage
 
-Import `StarknetIdNavigator` to access various Starknet ID functions. Initialize it with a **provider** and a **chain ID**.
+Import `StarknetIdNavigator` to access various Starknet.id functions. Initialize it with a **provider** and a **chain ID**.
 
 ##### With Starknet.js
 
@@ -309,7 +309,7 @@ A `Promise`\<`BigInt[]`\> representing the user unbounded verifier data. Throws 
 
 ##### decodeDomain
 
-Converts an encoded Starknet ID domain represented as an array of big integers into a string representation.
+Converts an encoded Starknet.id domain represented as an array of big integers into a string representation.
 
 ▸ utils.**decodeDomain**(`encoded`: `BigInt`[]) => `string`
 
@@ -343,7 +343,7 @@ A `BigInt[]` representing the encoded domain.
 
 ##### isStarkDomain
 
-Checks if a domain is a Starknet ID domain.
+Checks if a domain is a Starknet.id domain.
 
 ▸ utils.**isStarkDomain**(`domain`: `string`) => `boolean`
 
@@ -359,7 +359,7 @@ A `boolean` representing if the domain is a .stark domain.
 
 ##### isStarkRootDomain
 
-Checks if a domain is a Starknet ID root domain.
+Checks if a domain is a Starknet.id root domain.
 
 ▸ utils.**isStarkRootDomain**(`domain`: `string` | `undefined`) => `boolean`
 
@@ -375,7 +375,7 @@ A `boolean` representing if the domain is a .stark root domain.
 
 ##### isSubdomain
 
-Checks if a domain is a Starknet ID subdomain.
+Checks if a domain is a Starknet.id subdomain.
 
 ▸ utils.**isSubdomain**(`domain`: `string` | `undefined`) => `boolean`
 
@@ -425,7 +425,7 @@ A `boolean` representing if the domain is a Xplorer subdomain.
 
 ##### getNamingContract
 
-Retrieve the Starknet ID naming contract address based on the chain ID.
+Retrieve the Starknet.id naming contract address based on the chain ID.
 
 ▸ utils.**getNamingContract**(`chainId`: `StarknetChainId`) => `string`
 
@@ -441,7 +441,7 @@ A `string` representing the naming contract address.
 
 ##### getIdentityContract
 
-Retrieve the Starknet ID identity contract address based on the chain ID.
+Retrieve the Starknet.id identity contract address based on the chain ID.
 
 ▸ utils.**getIdentityContract**(`chainId`: `StarknetChainId`) => `string`
 
@@ -457,7 +457,7 @@ A `string` representing the identity contract address.
 
 ##### getVerifierContract
 
-Retrieve the Starknet ID verifier contract address based on the chain ID.
+Retrieve the Starknet.id verifier contract address based on the chain ID.
 
 ▸ utils.**getVerifierContract**(`chainId`: `StarknetChainId`) => `string`
 

@@ -1,7 +1,7 @@
 {
-  "starknetid-api": "Starknet ID API",
+  "starknetid-api": "Starknet.id API",
   "starknetidjs": "Starknetid.js",
+  "starknetidrs": "Starknetid.rs",
   "starknetjs": "Starknet.js",
-  "starknetreact": "Starknet React",
-  "starknetidrs": "Starknet-id.rs"
+  "starknetreact": "Starknet React"
 }
