@@ -1,0 +1,156 @@
+# Starknet React
+
+Starknet React provides seamless integration with Starknet.id, allowing you to effortlessly retrieve Stark names and addresses.
+
+[🔗 View the source code on GitHub](https://github.com/apibara/starknet-react)
+
+## Installation
+
+Starknet React can be installed via npm, yarn, or pnpm:
+
+```bash
+npm install @starknet-react/core
+
+yarn add @starknet-react/core
+
+pnpm add @starknet-react/core
+```
+
+## Usage
+
+### Hooks
+
+#### useStarkName
+
+The `useStarkName` hook enables you to fetch the Stark name associated with a given address. By default, it uses the Starknet.id naming contract, but you can specify an alternative contract if needed. If no Stark name is found for the address, the hook will return "stark."
+
+▸ **useStarkName**(`address`, `contract?`): `StarkNameResult`
+
+**Parameters**
+
+| Name        | Type     | Description                      |
+| :---------- | :------- | -------------------------------- |
+| `address`   | `string` | The address to query             |
+| `contract?` | `string` | Optional naming contract address |
+
+**Returns**
+
+The hook returns an object with the following structure:
+
+```tsx
+interface StarkNameResult {
+  /** Stark name. */
+  data?: string;
+  /** Error fetching name. */
+  error?: unknown;
+  isIdle: boolean;
+  /** True if loading stark name. */
+  isLoading: boolean;
+  isFetching: boolean;
+  isSuccess: boolean;
+  /** True if error while loading stark name. */
+  isError: boolean;
+  isFetched: boolean;
+  isFetchedAfterMount: boolean;
+  isRefetching: boolean;
+  refetch: () => void;
+  status: "idle" | "error" | "loading" | "success";
+}
+```
+
+**Defined in**
+
+[core/src/hooks/starknetid.ts:69](https://github.com/apibara/starknet-react/blob/main/packages/core/src/hooks/starknetid.ts#L69)
+
+**Example usage**
+
+Fetching the Stark name using the default contract
+
+```tsx
+function Component() {
+  const address =
+    "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3";
+  const { data, isLoading, isError } = useStarkName({ address });
+
+  if (isLoading) return <span>Loading...</span>;
+  if (isError) return <span>Error fetching name...</span>;
+  return <span>StarkName: {data}</span>;
+}
+```
+
+Fetching the Stark name using a custom contract
+
+```tsx
+function Component() {
+  const address =
+    "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3";
+  const { data, isLoading, isError } = useStarkName({
+    address,
+    contract: "0x1234",
+  });
+
+  if (isLoading) return <span>Loading...</span>;
+  if (isError) return <span>Error fetching name...</span>;
+  return <span>StarkName: {data}</span>;
+}
+```
+
+---
+
+#### useAddressFromStarkName
+
+The `useAddressFromStarkName` hook fetches the address corresponding to a given stark name. By default, it queries the Starknet.id naming contract. However, you can specify an alternative contract by providing its address. If the Stark name doesn't have an associated address, the hook returns "0x0".
+
+▸ **useAddressFromStarkName**(`name`, `contract?`): `AddressFromStarkNameResult`
+
+**Parameters**
+
+| Name        | Type     | Description                      |
+| :---------- | :------- | -------------------------------- |
+| `name`      | `string` | The starkname to look up         |
+| `contract?` | `string` | Optional naming contract address |
+
+**Returns**
+
+The hook returns an object with the following structure:
+
+```tsx
+interface AddressFromStarkNameResult {
+  /** Address. */
+  data?: string;
+  /** Error fetching name. */
+  error?: unknown;
+  isIdle: boolean;
+  /** True if loading stark name. */
+  isLoading: boolean;
+  isFetching: boolean;
+  isSuccess: boolean;
+  /** True if error while loading stark name. */
+  isError: boolean;
+  isFetched: boolean;
+  isFetchedAfterMount: boolean;
+  isRefetching: boolean;
+  refetch: () => void;
+  status: "idle" | "error" | "loading" | "success";
+}
+```
+
+**Defined in**
+
+[core/src/hooks/starknetid.ts:160](https://github.com/apibara/starknet-react/blob/main/packages/core/src/hooks/starknetid.ts#L160)
+
+**Example usage**
+
+The following example demonstrates how to fetch the address corresponding to a stark name.
+
+```tsx
+function Component() {
+  const { data, isLoading, isError } = useAddressFromStarkName({
+    name: "vitalik.stark",
+  });
+
+  if (isLoading) return <span>Loading...</span>;
+  if (isError) return <span>Error fetching address...</span>;
+  return <span>address: {data}</span>;
+}
+```
