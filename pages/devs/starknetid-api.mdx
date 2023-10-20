@@ -124,3 +124,310 @@ The API will return the associated braavos and xplorer subdomains.
   "domains":[]
 }
 ```
+
+---
+
+### Address to Starknet IDs
+
+Retrieve all the Starknet IDs owned by a given address.
+
+**Method & URL**
+
+- HTTP Method: `GET`
+- API URL: `https://api.starknet.id/addr_to_full_ids`
+
+**Query Parameters**
+
+| Name   | Type     | Description          |
+| :----- | :------- | -------------------- |
+| `addr` | `string` | The address to query |
+
+**Response**
+
+The API will return all the Starknet IDs owned by the address.
+
+**Example request**
+
+`https://api.starknet.id/addr_to_full_ids?addr=0x072D4F3FA4661228ed0c9872007fc7e12a581E000FAd7b8f3e3e5bF9E6133207`
+
+**Success Response Example**
+
+```json
+{
+  "full_ids": [
+    { "id": "694846134574" },
+    { "id": "846904695223" },
+    { "id": "718722140035", "domain": "deployer.fricoben.stark" },
+    { "id": "4799954900", "domain": "domaintesttest.stark" },
+    { "id": "23365742225" },
+    { "id": "289323426116", "domain": "treasuryship.stark" }
+  ]
+}
+```
+
+**Empty Response Example**
+
+`https://api.starknet.id/addr_to_full_ids?addr=0x00Ec0ED6E46a4435C6324D47EADeaadFBc9f66D372F4Cf36b767F5F26754bB47`
+
+```
+{
+  "full_ids": []
+}
+```
+
+**Error Response Example**
+
+`https://api.starknet.id/addr_to_full_ids?addr=lol.stark`
+
+```
+Failed to deserialize query string: invalid character
+```
+
+---
+
+### Address to Available Starknet IDs
+
+Retrieve available (not associated with a domain) Starknet IDs owned by a given address.
+
+**Method & URL**
+
+- HTTP Method: `GET`
+- API URL: `https://api.starknet.id/addr_to_available_ids`
+
+**Query Parameters**
+
+| Name   | Type     | Description          |
+| :----- | :------- | -------------------- |
+| `addr` | `string` | The address to query |
+
+**Response**
+
+The API will return all the Starknet IDs that are not linked with a domain yet owned by the address.
+
+**Example request**
+
+`https://api.starknet.id/addr_to_available_ids?addr=0x072D4F3FA4661228ed0c9872007fc7e12a581E000FAd7b8f3e3e5bF9E6133207`
+
+**Success Response Example**
+
+```json
+{
+  "ids": ["694846134574", "846904695223", "23365742225"]
+}
+```
+
+**Empty Response Example**
+
+```
+{
+  "ids": []
+}
+```
+
+**Error Response Example**
+
+`https://api.starknet.id/addr_to_available_ids?addr=lol.stark`
+
+```
+Failed to deserialize query string: invalid character
+```
+
+---
+
+### Address to token id
+
+Retrieve the token ID associated with a given address.
+
+**Method & URL**
+
+- HTTP Method: `GET`
+- API URL: `https://api.starknet.id/addr_to_token_id`
+
+**Query Parameters**
+
+| Name   | Type     | Description          |
+| :----- | :------- | -------------------- |
+| `addr` | `string` | The address to query |
+
+**Response**
+
+The API will retrieve the token id of the Starknet ID associated with the main domain of the address.
+
+**Example request**
+
+`https://api.starknet.id/addr_to_token_id?addr=0x072D4F3FA4661228ed0c9872007fc7e12a581E000FAd7b8f3e3e5bF9E6133207`
+
+**Success Response Example**
+
+```json
+{
+  "token_id": "718722140035"
+}
+```
+
+**Error Response Example**
+
+`https://api.starknet.id/addr_to_token_id?addr=0x00Ec0ED6E46a4435C6324D47EADeaadFBc9f66D372F4Cf36b767F5F26754bB47`
+
+```
+no main domain found for this address
+```
+
+---
+
+### Token id to data
+
+Retrieve the data of a Starknet ID.
+
+**Method & URL**
+
+- HTTP Method: `GET`
+- API URL: `https://api.starknet.id/id_to_data`
+
+**Query Parameters**
+
+| Name | Type     | Description     |
+| :--- | :------- | --------------- |
+| `id` | `string` | The id to query |
+
+**Response**
+
+The API will retrieve the data (Social Media, Avatar, Proof of personhood...) of the Starknet ID.
+
+**Example request**
+
+`https://api.starknet.id/id_to_data?id=12`
+
+**Success Response Example**
+
+```json
+{
+  "domain": "66868.stark",
+  "addr": "0x016ebaaccb6a06c0c42be5d57b7dc0c86985af1aa73e9a17ecdda5df798813ae",
+  "domain_expiry": 1702361677,
+  "is_owner_main": false,
+  "owner_addr": "0x016ebaaccb6a06c0c42be5d57b7dc0c86985af1aa73e9a17ecdda5df798813ae",
+  "starknet_id": "12"
+}
+```
+
+**Error Response Example**
+
+`https://api.starknet.id/id_to_data?id=10123891239013292`
+
+```
+starknet id not found
+```
+
+---
+
+### Domain to data
+
+Retrieve the data of a domain.
+
+**Method & URL**
+
+- HTTP Method: `GET`
+- API URL: `https://api.starknet.id/domain_to_data`
+
+**Query Parameters**
+
+| Name     | Type     | Description         |
+| :------- | :------- | ------------------- |
+| `domain` | `string` | The domain to query |
+
+**Response**
+
+The API will retrieve the data (Social Media, Avatar, Proof of personhood...) of the domain.
+
+**Example request**
+
+`https://api.starknet.id/domain_to_data?domain=fricoben.stark`
+
+**Success Response Example**
+
+```json
+{
+  "domain": "fricoben.stark",
+  "addr": "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3",
+  "domain_expiry": 1796569200,
+  "is_owner_main": true,
+  "owner_addr": "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3",
+  "github": "78437165",
+  "twitter": "1255853529866145794",
+  "discord": "662387807901188096",
+  "old_github": "78437165",
+  "old_twitter": "1255853529866145794",
+  "old_discord": "662387807901188096",
+  "starknet_id": "8"
+}
+```
+
+**Error Response Example**
+
+`https://api.starknet.id/domain_to_data?domain=qqqqqqqqqs.stark`
+
+```
+Error while fetching from database
+```
+
+---
+
+### Data to token ids
+
+SOON Available
+
+---
+
+### Uri
+
+Retrieve the NFT uri of a Starknet ID.
+
+**Method & URL**
+
+- HTTP Method: `GET`
+- API URL: `https://api.starknet.id/uri`
+
+**Query Parameters**
+
+| Name | Type     | Description     |
+| :--- | :------- | --------------- |
+| `id` | `string` | The id to query |
+
+**Response**
+
+The API will retrieve the uri of the Starknet ID NFT.
+
+**Example request**
+
+`https://api.starknet.id/uri?id=12`
+
+**Success Response Example**
+
+```json
+{
+  "name": "66868.stark",
+  "description": "This token represents an identity on StarkNet.",
+  "image": "https://starknet.id/api/identicons/12",
+  "expiry": 1702361677,
+  "attributes": [
+    { "trait_type": "Subdomain", "value": ["yes"] },
+    { "trait_type": "Domain expiry", "value": ["Dec 12, 2023"] },
+    { "trait_type": "Domain expiry timestamp", "value": ["1702361677"] }
+  ]
+}
+```
+
+**Inexistant Starknet ID Response Example**
+
+`https://api.starknet.id/uri?id=1627381236172`
+
+```json
+{
+  "name": "Starknet ID: 1627381236172",
+  "description": "This token represents an identity on StarkNet.",
+  "image": "https://starknet.id/api/identicons/1627381236172",
+  "expiry": null,
+  "attributes": null
+}
+```
