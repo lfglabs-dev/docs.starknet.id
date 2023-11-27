@@ -58,7 +58,7 @@ const starkname = await starknetIdNavigator.getStarkName(address ?? "");
 `ConnectButton` is a React component that allows users to connect their wallets to Starknet. It leverages `starknet.js` and `get-starknet` for blockchain interactions and `starknetid.js` for user profile data retrieval.
 
 ```tsx
-import { useEffect, useMemo, useState } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import {
   type ConnectOptions,
   type DisconnectOptions,
@@ -130,7 +130,7 @@ const ConnectButton: FunctionComponent = () => {
           </p>
           <div className="absolute self-stretch w-px right-16 inset-y-0 bg-black" />
         </div>
-        <div className={styles.buttonIcon}>
+        <div>
           <img
             src={profile?.profilePicture}
             width="32"
