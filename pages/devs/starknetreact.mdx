@@ -4,6 +4,8 @@ Starknet React provides seamless integration with Starknet.id, allowing you to e
 
 [🔗 View the source code on GitHub](https://github.com/apibara/starknet-react)
 
+[🔗 Check out interactive demo of the hooks](https://starknet-react.com/demos/starknetid)
+
 Please note that you need to install version 2 of starknet-react to use the starknet.id hooks.
 
 ## Installation
@@ -19,6 +21,8 @@ pnpm add @starknet-react/chains@next @starknet-react/core@next starknet get-star
 ```
 
 ## Usage
+
+### Button Component
 
 ### Hooks
 
@@ -62,7 +66,7 @@ interface StarkNameResult {
 
 **Defined in**
 
-[core/src/hooks/starknetid.ts:69](https://github.com/apibara/starknet-react/blob/main/packages/core/src/hooks/starknetid.ts#L69)
+[core/src/hooks/useStarkName.ts](https://github.com/apibara/starknet-react/blob/main/packages/core/src/hooks/useStarkName.ts)
 
 **Example usage**
 
@@ -139,7 +143,7 @@ interface AddressFromStarkNameResult {
 
 **Defined in**
 
-[core/src/hooks/starknetid.ts:160](https://github.com/apibara/starknet-react/blob/main/packages/core/src/hooks/starknetid.ts#L160)
+[core/src/hooks/useStarkAddress.ts](https://github.com/apibara/starknet-react/blob/main/packages/core/src/hooks/useStarkAddress.ts)
 
 **Example usage**
 
@@ -154,5 +158,98 @@ function Component() {
   if (isLoading) return <span>Loading...</span>;
   if (isError) return <span>Error fetching address...</span>;
   return <span>address: {data}</span>;
+}
+```
+
+---
+
+#### useStarkProfile
+
+The `useStarkProfile` hook fetches all profile data corresponding to a given address. By default, it queries the Starknet.id naming and identity contract. However, you can specify alternative contracts by providing their addresses.
+
+▸ **useStarkProfile**(`address`, `identicons?`, `namingContract?`, `identityContract?`): `useStarkProfileResult`
+
+**Parameters**
+
+| Name                | Type      | Description                                                      |
+| :------------------ | :-------- | ---------------------------------------------------------------- |
+| `address`           | `string`  | The address to look up                                           |
+| `identicons?`       | `boolean` | Get identicon url as profile picture if none was set by the user |
+| `namingContract?`   | `string`  | Optional naming contract address                                 |
+| `identityContract?` | `string`  | Optional identity contract address                               |
+
+**Returns**
+
+The hook returns an object with the following structure:
+
+```tsx
+interface useStarkProfileResult {
+  /** Profile data. */
+  data?: GetStarkprofileResponse;
+  /** Error fetching name. */
+  error?: unknown;
+  isIdle: boolean;
+  /** True if loading stark name. */
+  isLoading: boolean;
+  isFetching: boolean;
+  isSuccess: boolean;
+  /** True if error while loading stark name. */
+  isError: boolean;
+  isFetched: boolean;
+  isFetchedAfterMount: boolean;
+  isRefetching: boolean;
+  refetch: () => void;
+  status: "idle" | "error" | "loading" | "success";
+}
+```
+
+Where:
+
+```tsx
+type GetStarkprofileResponse = {
+  /** The Stark name. */
+  name?: string;
+  /** Metadata url of the NFT set as profile picture. */
+  profile?: string;
+  /** Profile picture url. */
+  profilePicture?: string;
+  /** Social networks ids */
+  twitter?: string;
+  github?: string;
+  discord?: string;
+  /** Proof of personhood verification. */
+  proofOfPersonhood?: boolean;
+};
+```
+
+**Defined in**
+
+[core/src/hooks/useStarkProfile.ts](https://github.com/apibara/starknet-react/blob/main/packages/core/src/hooks/useStarkProfile.ts)
+
+**Example usage**
+
+The following example demonstrates how to fetch the profile corresponding to an address.
+
+```tsx
+function Component() {
+  const address =
+    "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3";
+  const { data, isLoading, isError } = useStarkProfile({
+    address,
+    identicons: true,
+  });
+
+  if (isLoading) return <span>Loading...</span>;
+  if (isError) return <span>Error fetching profile...</span>;
+  return (
+    <>
+      <p>Name: {data?.name}</p>
+      <p>Discord id: {data?.discord}</p>
+      <p>Twitter id: {data?.twitter}</p>
+      <p>Github id: {data?.github}</p>
+      <p>Proof of personhood verification: {data?.proofOfPersonhood}</p>
+      <p>Profile picture metadata : {data?.profilePicture}</p>
+    </>
+  );
 }
 ```
