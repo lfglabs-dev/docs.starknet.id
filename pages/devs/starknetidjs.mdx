@@ -420,18 +420,19 @@ A `Promise`\<`BigInt[]`\> representing the user profile picture verifier data. T
 
 #### getProfileData
 
-Get user Starknet profile data from their address. This function retrieves a user's starkname, profile picture URL, social networks IDs, and proof of personhood verification status. If no specific verifiers are provided, it defaults to using the starknet.id verifiers contract addresses.
+Get user Starknet profile data from their address. This function retrieves a user's starkname, profile picture URL, social networks IDs, and proof of personhood verification status. If no specific verifiers are provided, it defaults to using the starknet.id verifiers contract addresses. You can disable getting the default profile picture by setting `useDefaultPfp` to false.
 
-▸ StarknetIdNavigator.**getProfileData**(`address`: `string`, `verifier`?: `string`, `pfp_verifier`?: `string`, `pop_verifier`?: `string`) => `Promise`\<`StarkProfile`\>
+▸ StarknetIdNavigator.**getProfileData**(`address`: `string`, `useDefaultPfp`?: `boolean`, `verifier`?: `string`, `pfp_verifier`?: `string`, `pop_verifier`?: `string`) => `Promise`\<`StarkProfile`\>
 
 **Parameters**:
 
-| Name            | Type     | Description                                                |
-| :-------------- | :------- | :--------------------------------------------------------- |
-| `address`       | `string` | Hexadecimal account address                                |
-| `verifier?`     | `string` | Optional contract address for social networks verifier     |
-| `pfp_verifier?` | `string` | Optional contract address for profile picture verifier     |
-| `pop_verifier?` | `string` | Optional contract address for proof of personhood verifier |
+| Name            | Type      | Description                                                |
+| :-------------- | :-------- | :--------------------------------------------------------- |
+| `address`       | `string`  | Hexadecimal account address                                |
+| `useDefaultPfp` | `boolean` | Get default pfp url if none was set by the user            |
+| `verifier?`     | `string`  | Optional contract address for social networks verifier     |
+| `pfp_verifier?` | `string`  | Optional contract address for profile picture verifier     |
+| `pop_verifier?` | `string`  | Optional contract address for proof of personhood verifier |
 
 **Returns**:
 

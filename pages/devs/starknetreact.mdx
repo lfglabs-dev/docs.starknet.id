@@ -165,18 +165,18 @@ function Component() {
 
 #### useStarkProfile
 
-The `useStarkProfile` hook fetches all profile data corresponding to a given address. By default, it queries the Starknet.id naming and identity contract. However, you can specify alternative contracts by providing their addresses.
+The `useStarkProfile` hook fetches all profile data corresponding to a given address. By default, it queries the Starknet.id naming and identity contracts. However, you can specify alternative contracts by providing their addresses.
 
-▸ **useStarkProfile**(`address`, `identicons?`, `namingContract?`, `identityContract?`): `useStarkProfileResult`
+▸ **useStarkProfile**(`address`, `useDefaultPfp?`, `namingContract?`, `identityContract?`): `useStarkProfileResult`
 
 **Parameters**
 
-| Name                | Type      | Description                                                      |
-| :------------------ | :-------- | ---------------------------------------------------------------- |
-| `address`           | `string`  | The address to look up                                           |
-| `identicons?`       | `boolean` | Get identicon url as profile picture if none was set by the user |
-| `namingContract?`   | `string`  | Optional naming contract address                                 |
-| `identityContract?` | `string`  | Optional identity contract address                               |
+| Name                | Type      | Description                                     |
+| :------------------ | :-------- | ----------------------------------------------- |
+| `address`           | `string`  | The address to look up                          |
+| `useDefaultPfp?`    | `boolean` | Get default pfp url if none was set by the user |
+| `namingContract?`   | `string`  | Optional naming contract address                |
+| `identityContract?` | `string`  | Optional identity contract address              |
 
 **Returns**
 
@@ -236,7 +236,6 @@ function Component() {
     "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3";
   const { data, isLoading, isError } = useStarkProfile({
     address,
-    identicons: true,
   });
 
   if (isLoading) return <span>Loading...</span>;
