@@ -394,11 +394,11 @@ A `Promise`\<`BigInt[]`\> representing the user unbounded verifier data. Throws 
 - Throws an error if the idDomainOrAddr is invalid.
 - Returns `0x0` when field in custom verifier contract does not exist or id does not exists.
 
-#### getPpVerifierData
+#### getPfpVerifierData
 
 Get User profile picture verifier data from starknet id, address or domain. Use this function to retrieve an array containing user domain, NFT contract address and NFT token id. If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
 
-▸ StarknetIdNavigator.**getPpVerifierData**(`idDomainOrAddr`: `string`, `verifier`?: `string`) => `Promise`\<`BigInt[]`\>
+▸ StarknetIdNavigator.**getPfpVerifierData**(`idDomainOrAddr`: `string`, `verifier`?: `string`) => `Promise`\<`BigInt[]`\>
 
 **Parameters**:
 
@@ -619,11 +619,11 @@ Retrieve the Starknet.id verifier contract address based on the chain ID.
 
 A `string` representing the verifier contract address.
 
-##### getPpVerifierContract
+##### getPfpVerifierContract
 
 Retrieve the Starknet.id profile picture verifier contract address based on the chain ID.
 
-▸ utils.**getPpVerifierContract**(`chainId`: `StarknetChainId`) => `string`
+▸ utils.**getPfpVerifierContract**(`chainId`: `StarknetChainId`) => `string`
 
 **Parameters**
 
