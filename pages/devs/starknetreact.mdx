@@ -4,6 +4,8 @@ Starknet React provides seamless integration with Starknet.id, allowing you to e
 
 [🔗 View the source code on GitHub](https://github.com/apibara/starknet-react)
 
+[🔗 Check out interactive demo of the hooks](https://starknet-react.com/demos/starknetid)
+
 Please note that you need to install version 2 of starknet-react to use the starknet.id hooks.
 
 ## Installation
@@ -20,7 +22,163 @@ pnpm add @starknet-react/chains@next @starknet-react/core@next starknet get-star
 
 ## Usage
 
+### Button Component
+
+`ConnectButton` is a React component that allows users to connect their wallets to Starknet and show the starkname and profile picture when the user is connected.
+
+```tsx
+import { FunctionComponent } from "react";
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useStarkProfile,
+} from "@starknet-react/core";
+
+const ConnectButton: FunctionComponent = () => {
+  const { address } = useAccount();
+  const { connect, connectors } = useConnect();
+  const { disconnect } = useDisconnect();
+  const { data: profile } = useStarkProfile({ address });
+
+  return !address ? (
+    <div className="flex flex-col p-8 rounded-xl">
+      <p className="font-bold text-center">You need a Starknet wallet</p>
+      {connectors.map((connector) => {
+        if (connector.available()) {
+          return (
+            <div className="mt-5 flex justify-center" key={connector.id}>
+              <button onClick={() => connect({ connector })}>
+                <div className="flex justify-center items-center">
+                  Connect {connector.name}
+                </div>
+              </button>
+            </div>
+          );
+        }
+      })}
+    </div>
+  ) : (
+    <button
+      onClick={() => disconnect()}
+      className="relative w-[300px] h-12 leading-10 text-black font-bold uppercase block text-center border-2 m-1 px-8 py-0 rounded-md"
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex flex-row gap-1.5 items-center justify-around">
+          <p className="capitalize font-bold text-base font-bold mr-8">
+            {profile?.name}
+          </p>
+          <div className="absolute self-stretch w-px right-16 inset-y-0 bg-black" />
+        </div>
+        <div>
+          <img
+            src={profile?.profilePicture}
+            width="32"
+            height="32"
+            className="rounded-full"
+          />
+        </div>
+      </div>
+    </button>
+  );
+};
+
+export default ConnectButton;
+```
+
 ### Hooks
+
+#### useStarkProfile
+
+The `useStarkProfile` hook fetches all profile data corresponding to a given address. By default, it queries the Starknet.id naming and identity contracts. However, you can specify alternative contracts by providing their addresses.
+
+▸ **useStarkProfile**(`address`, `useDefaultPfp?`, `namingContract?`, `identityContract?`): `useStarkProfileResult`
+
+**Parameters**
+
+| Name                | Type      | Description                                     |
+| :------------------ | :-------- | ----------------------------------------------- |
+| `address`           | `string`  | The address to look up                          |
+| `useDefaultPfp?`    | `boolean` | Get default pfp url if none was set by the user |
+| `namingContract?`   | `string`  | Optional naming contract address                |
+| `identityContract?` | `string`  | Optional identity contract address              |
+
+**Returns**
+
+The hook returns an object with the following structure:
+
+```tsx
+interface useStarkProfileResult {
+  /** Profile data. */
+  data?: GetStarkprofileResponse;
+  /** Error fetching name. */
+  error?: unknown;
+  isIdle: boolean;
+  /** True if loading stark name. */
+  isLoading: boolean;
+  isFetching: boolean;
+  isSuccess: boolean;
+  /** True if error while loading stark name. */
+  isError: boolean;
+  isFetched: boolean;
+  isFetchedAfterMount: boolean;
+  isRefetching: boolean;
+  refetch: () => void;
+  status: "idle" | "error" | "loading" | "success";
+}
+```
+
+Where:
+
+```tsx
+type GetStarkprofileResponse = {
+  /** The Stark name. */
+  name?: string;
+  /** Metadata url of the NFT set as profile picture. */
+  profile?: string;
+  /** Profile picture url. */
+  profilePicture?: string;
+  /** Social networks ids */
+  twitter?: string;
+  github?: string;
+  discord?: string;
+  /** Proof of personhood verification. */
+  proofOfPersonhood?: boolean;
+};
+```
+
+**Defined in**
+
+[core/src/hooks/useStarkProfile.ts](https://github.com/apibara/starknet-react/blob/main/packages/core/src/hooks/useStarkProfile.ts)
+
+**Example usage**
+
+The following example demonstrates how to fetch the profile corresponding to an address.
+
+```tsx
+function Component() {
+  const address =
+    "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3";
+  const { data, isLoading, isError } = useStarkProfile({
+    address,
+  });
+
+  if (isLoading) return <span>Loading...</span>;
+  if (isError) return <span>Error fetching profile...</span>;
+  return (
+    <>
+      <p>Name: {data?.name}</p>
+      <p>Discord id: {data?.discord}</p>
+      <p>Twitter id: {data?.twitter}</p>
+      <p>Github id: {data?.github}</p>
+      <p>Proof of personhood verification: {data?.proofOfPersonhood}</p>
+      <p>Profile picture metadata : {data?.profilePicture}</p>
+    </>
+  );
+}
+```
+
+---
 
 #### useStarkName
 
@@ -62,7 +220,7 @@ interface StarkNameResult {
 
 **Defined in**
 
-[core/src/hooks/starknetid.ts:69](https://github.com/apibara/starknet-react/blob/main/packages/core/src/hooks/starknetid.ts#L69)
+[core/src/hooks/useStarkName.ts](https://github.com/apibara/starknet-react/blob/main/packages/core/src/hooks/useStarkName.ts)
 
 **Example usage**
 
@@ -139,7 +297,7 @@ interface AddressFromStarkNameResult {
 
 **Defined in**
 
-[core/src/hooks/starknetid.ts:160](https://github.com/apibara/starknet-react/blob/main/packages/core/src/hooks/starknetid.ts#L160)
+[core/src/hooks/useStarkAddress.ts](https://github.com/apibara/starknet-react/blob/main/packages/core/src/hooks/useStarkAddress.ts)
 
 **Example usage**
 

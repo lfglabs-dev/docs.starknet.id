@@ -53,6 +53,97 @@ const starknetIdNavigator = new StarknetIdNavigator(
 const starkname = await starknetIdNavigator.getStarkName(address ?? "");
 ```
 
+#### Button Component
+
+`ConnectButton` is a React component that allows users to connect their wallets to Starknet. It leverages `starknet.js` and `get-starknet` for blockchain interactions and `starknetid.js` for user profile data retrieval.
+
+```tsx
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
+import {
+  type ConnectOptions,
+  type DisconnectOptions,
+  connect,
+  disconnect,
+} from "get-starknet";
+import { Provider, constants } from "starknet";
+import { StarknetIdNavigator, type StarkProfile } from "starknetid.js";
+
+const ConnectButton: FunctionComponent = () => {
+  const [isConnected, setIsConnected] = useState(false);
+  const [address, setAddress] = useState("");
+  const [profile, setProfile] = useState<StarkProfile>();
+
+  const starknetIdNavigator = useMemo(() => {
+    return new StarknetIdNavigator(
+      new Provider({
+        rpc: {
+          nodeUrl: `https://starknet-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
+        },
+      }),
+      constants.StarknetChainId.SN_GOERLI
+    );
+  }, []);
+
+  useEffect(() => {
+    if (!starknetIdNavigator || !address) return;
+    (async () => {
+      const data = await starknetIdNavigator?.getProfileData(address);
+      if (!data) return;
+      if (data) setProfile(data);
+    })();
+  }, [address, starknetIdNavigator]);
+
+  function handleConnect(options?: ConnectOptions) {
+    return async () => {
+      const res = await connect(options);
+      setIsConnected(true);
+      setAddress(res?.selectedAddress || "");
+    };
+  }
+
+  function handleDisconnect(options?: DisconnectOptions) {
+    return async () => {
+      await disconnect(options);
+      setIsConnected(false);
+      setAddress("");
+    };
+  }
+
+  return !isConnected ? (
+    <button
+      onClick={handleConnect({ modalMode: "alwaysAsk" })}
+      className="relative w-[200px] h-12 text-black font-bold uppercase border-2 m-1 px-8 py-0 rounded-md"
+    >
+      Connect
+    </button>
+  ) : (
+    <button
+      onClick={handleDisconnect()}
+      className="relative w-[300px] h-12 leading-10 text-black font-bold uppercase block text-center border-2 m-1 px-8 py-0 rounded-md"
+    >
+      <div className="flex items-center justify-between">
+        <div className="flex flex-row gap-1.5 items-center justify-around">
+          <p className="capitalize font-bold text-base font-bold mr-8">
+            {profile?.name}
+          </p>
+          <div className="absolute self-stretch w-px right-16 inset-y-0 bg-black" />
+        </div>
+        <div>
+          <img
+            src={profile?.profilePicture}
+            width="32"
+            height="32"
+            className="rounded-full"
+          />
+        </div>
+      </div>
+    </button>
+  );
+};
+
+export default ConnectButton;
+```
+
 #### Using custom contracts
 
 You can also use `starknetid.js` with your custom naming and identity contracts.
@@ -134,7 +225,7 @@ const domain = await starknetIdNavigator.getStarkName(
 
 Get Starknet id from domain.
 
-▸ StarknetIdNavigator.**getStarknetId**(`domain`: `string`) => `Promise`\<`number`\>
+▸ StarknetIdNavigator.**getStarknetId**(`domain`: `string`) => `Promise`\<`string`\>
 
 **Parameters**:
 
@@ -144,7 +235,7 @@ Get Starknet id from domain.
 
 **Returns**:
 
-A `Promise`\<`number`\> representing the id. Throws an error if the domain is invalid.
+A `Promise`\<`string`\> representing the id. Throws an error if the domain is invalid.
 
 **Example usage**:
 
@@ -158,15 +249,15 @@ const id = await starknetIdNavigator.getStarknetId("fricoben.stark");
 
 Get user data from starknet id, domain or address.
 
-▸ StarknetIdNavigator.**getUserData**(`idDomainOrAddr`: `number | string`, `field`: `string`)
+▸ StarknetIdNavigator.**getUserData**(`idDomainOrAddr`: `string`, `field`: `string`)
 => `Promise`\<`BigInt`\>
 
 **Parameters**:
 
-| Name             | Type                 | Description                                                  |
-| :--------------- | :------------------- | :----------------------------------------------------------- |
-| `idDomainOrAddr` | `number` \| `string` | starknet id (number), domain or hexadecimal address (string) |
-| `field`          | `string`             | The field to fetch                                           |
+| Name             | Type     | Description                                |
+| :--------------- | :------- | :----------------------------------------- |
+| `idDomainOrAddr` | `string` | starknet id, domain or hexadecimal address |
+| `field`          | `string` | The field to fetch                         |
 
 **Returns**:
 
@@ -176,16 +267,16 @@ A `Promise`\<`BigInt`\> representing the user data. Throws an error if the idDom
 
 Get user data from starknet id, address or domain. Use this function to retrieve an array knowing its size. It will return zeros if not written.
 
-▸ StarknetIdNavigator.**getExtentedUserData**(`idOrDomain`: `number` | `string`, `field`:
+▸ StarknetIdNavigator.**getExtentedUserData**(`idDomainOrAddr`: `string`, `field`:
 string`, `length`: `number`) => `Promise`\<`BigInt[]`\>
 
 **Parameters**:
 
-| Name         | Type                 | Description                 |
-| :----------- | :------------------- | :-------------------------- |
-| `idOrDomain` | `number` \| `string` | The domain or id to resolve |
-| `field`      | `string`             | The field to fetch          |
-| `length`     | `number`             | Size of field to fetch      |
+| Name             | Type     | Description                 |
+| :--------------- | :------- | :-------------------------- |
+| `idDomainOrAddr` | `string` | The domain or id to resolve |
+| `field`          | `string` | The field to fetch          |
+| `length`         | `number` | Size of field to fetch      |
 
 **Returns**:
 
@@ -195,15 +286,15 @@ A `Promise`\<`BigInt[]`\> representing the user extended data. Throws an error i
 
 Get User unbounded data from starknet id, address or domain. Use this function to retrieve an array up to zero (not included).
 
-▸ StarknetIdNavigator.**getUnboundedUserData**(`idDomainOrAddr`: `number` | `string`, `field`:
+▸ StarknetIdNavigator.**getUnboundedUserData**(`idDomainOrAddr`: `string`, `field`:
 `string`) => `Promise`\<`BigInt[]`\>
 
 **Parameters**:
 
-| Name             | Type                 | Description                                                  |
-| :--------------- | :------------------- | :----------------------------------------------------------- |
-| `idDomainOrAddr` | `number` \| `string` | starknet id (number), domain or hexadecimal address (string) |
-| `field`          | `string`             | The field to fetch                                           |
+| Name             | Type     | Description                                |
+| :--------------- | :------- | :----------------------------------------- |
+| `idDomainOrAddr` | `string` | starknet id, domain or hexadecimal address |
+| `field`          | `string` | The field to fetch                         |
 
 **Returns**:
 
@@ -215,16 +306,16 @@ A `Promise`\<`BigInt[]`\> representing the user unbounded data. Throws an error 
 
 Get verifier data from starknet id, address or domain. If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
 
-▸ StarknetIdNavigator.**getVerifierData**(`idDomainOrAddr`: `number` | `string`, `field`:
+▸ StarknetIdNavigator.**getVerifierData**(`idDomainOrAddr`: `string`, `field`:
 `string`, `verifier`?: `string`) => `Promise`\<`BigInt`\>
 
 **Parameters**:
 
-| Name             | Type                 | Description                                                  |
-| :--------------- | :------------------- | :----------------------------------------------------------- |
-| `idDomainOrAddr` | `number` \| `string` | starknet id (number), domain or hexadecimal address (string) |
-| `field`          | `string`             | The field to fetch                                           |
-| `verifier?`      | `string`             | Optional verifier contract address                           |
+| Name             | Type     | Description                                |
+| :--------------- | :------- | :----------------------------------------- |
+| `idDomainOrAddr` | `string` | starknet id, domain or hexadecimal address |
+| `field`          | `string` | The field to fetch                         |
+| `verifier?`      | `string` | Optional verifier contract address         |
 
 **Returns**:
 
@@ -248,17 +339,17 @@ const data = await starknetIdNavigator.getVerifierData(
 
 Get extended verifier data from starknet id, address or domain. Use this function to retrieve an array knowing its size. It will return zeros if not written. If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
 
-▸ StarknetIdNavigator.**getExtendedVerifierData**(`idDomainOrAddr`: `number` | `string`,
+▸ StarknetIdNavigator.**getExtendedVerifierData**(`idDomainOrAddr`: `string`,
 `field`: `string`, `length`: `number`, `verifier`?: `string`) => `Promise`\<`BigInt[]`\>
 
 **Parameters**:
 
-| Name             | Type                 | Description                                                  |
-| :--------------- | :------------------- | :----------------------------------------------------------- |
-| `idDomainOrAddr` | `number` \| `string` | starknet id (number), domain or hexadecimal address (string) |
-| `field`          | `string`             | The field to fetch                                           |
-| `length`         | `number`             | The size of the field                                        |
-| `verifier?`      | `string`             | Optional verifier contract address                           |
+| Name             | Type     | Description                                |
+| :--------------- | :------- | :----------------------------------------- |
+| `idDomainOrAddr` | `string` | starknet id, domain or hexadecimal address |
+| `field`          | `string` | The field to fetch                         |
+| `length`         | `number` | The size of the field                      |
+| `verifier?`      | `string` | Optional verifier contract address         |
 
 **Returns**:
 
@@ -283,16 +374,16 @@ const data = await starknetIdNavigator.getExtendedVerifierData(
 
 Get User unbounded data from starknet id, address or domain. Use this function to retrieve an array up to zero (not included). If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
 
-▸ StarknetIdNavigator.**getUnboundedVerifierData**(`idDomainOrAddr`: `number` | `string`,
+▸ StarknetIdNavigator.**getUnboundedVerifierData**(`idDomainOrAddr`: `string`,
 `field`: `string`, `verifier`?: `string`) => `Promise`\<`BigInt[]`\>
 
 **Parameters**:
 
-| Name             | Type                 | Description                                                  |
-| :--------------- | :------------------- | :----------------------------------------------------------- |
-| `idDomainOrAddr` | `number` \| `string` | starknet id (number), domain or hexadecimal address (string) |
-| `field`          | `string`             | The field to fetch                                           |
-| `verifier?`      | `string`             | Optional verifier contract address                           |
+| Name             | Type     | Description                                |
+| :--------------- | :------- | :----------------------------------------- |
+| `idDomainOrAddr` | `string` | starknet id, domain or hexadecimal address |
+| `field`          | `string` | The field to fetch                         |
+| `verifier?`      | `string` | Optional verifier contract address         |
 
 **Returns**:
 
@@ -303,18 +394,18 @@ A `Promise`\<`BigInt[]`\> representing the user unbounded verifier data. Throws 
 - Throws an error if the idDomainOrAddr is invalid.
 - Returns `0x0` when field in custom verifier contract does not exist or id does not exists.
 
-#### getPpVerifierData
+#### getPfpVerifierData
 
 Get User profile picture verifier data from starknet id, address or domain. Use this function to retrieve an array containing user domain, NFT contract address and NFT token id. If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
 
-▸ StarknetIdNavigator.**getPpVerifierData**(`idDomainOrAddr`: `number` | `string`, `verifier`?: `string`) => `Promise`\<`BigInt[]`\>
+▸ StarknetIdNavigator.**getPfpVerifierData**(`idDomainOrAddr`: `string`, `verifier`?: `string`) => `Promise`\<`BigInt[]`\>
 
 **Parameters**:
 
-| Name             | Type                 | Description                                                  |
-| :--------------- | :------------------- | :----------------------------------------------------------- |
-| `idDomainOrAddr` | `number` \| `string` | starknet id (number), domain or hexadecimal address (string) |
-| `verifier?`      | `string`             | Optional verifier contract address                           |
+| Name             | Type     | Description                                |
+| :--------------- | :------- | :----------------------------------------- |
+| `idDomainOrAddr` | `string` | starknet id, domain or hexadecimal address |
+| `verifier?`      | `string` | Optional verifier contract address         |
 
 **Returns**:
 
@@ -324,6 +415,41 @@ A `Promise`\<`BigInt[]`\> representing the user profile picture verifier data. T
 
 - Throws an error if the idDomainOrAddr is invalid.
 - Returns an array of `0x0` when user has not set a profile picture or id does not exists.
+
+#### getProfileData
+
+Get user Starknet profile data from their address. This function retrieves a user's starkname, profile picture URL, social networks IDs, and proof of personhood verification status. If no specific verifiers are provided, it defaults to using the starknet.id verifiers contract addresses. You can disable getting the default profile picture by setting `useDefaultPfp` to false.
+
+▸ StarknetIdNavigator.**getProfileData**(`address`: `string`, `useDefaultPfp`?: `boolean`, `verifier`?: `string`, `pfp_verifier`?: `string`, `pop_verifier`?: `string`) => `Promise`\<`StarkProfile`\>
+
+**Parameters**:
+
+| Name            | Type      | Description                                                |
+| :-------------- | :-------- | :--------------------------------------------------------- |
+| `address`       | `string`  | Hexadecimal account address                                |
+| `useDefaultPfp` | `boolean` | Get default pfp url if none was set by the user            |
+| `verifier?`     | `string`  | Optional contract address for social networks verifier     |
+| `pfp_verifier?` | `string`  | Optional contract address for profile picture verifier     |
+| `pop_verifier?` | `string`  | Optional contract address for proof of personhood verifier |
+
+**Returns**:
+
+A `Promise`\<`StarkProfile`\> representing the Starknet profile data of the user. The StarkProfile includes starkname, profile picture URL, social networks IDs, and proof of personhood verification status.
+
+```
+type StarkProfile = {
+  name?: string;
+  profilePicture?: string;
+  discord?: string;
+  twitter?: string;
+  github?: string;
+  proofOfPersonhood?: boolean;
+};
+```
+
+**Errors**:
+
+- Throws an error if address is invalid.
 
 ### Utils
 
@@ -492,3 +618,57 @@ Retrieve the Starknet.id verifier contract address based on the chain ID.
 **Returns**:
 
 A `string` representing the verifier contract address.
+
+##### getPfpVerifierContract
+
+Retrieve the Starknet.id profile picture verifier contract address based on the chain ID.
+
+▸ utils.**getPfpVerifierContract**(`chainId`: `StarknetChainId`) => `string`
+
+**Parameters**
+
+| Name      | Type              | Description                              |
+| :-------- | :---------------- | :--------------------------------------- |
+| `chainId` | `StarknetChainId` | chain on which the contract was deployed |
+
+**Returns**:
+
+A `string` representing the profile picture verifier contract address.
+
+##### getPopVerifierContract
+
+Retrieve the Starknet.id proof of personhood verifier contract address based on the chain ID.
+
+▸ utils.**getPopVerifierContract**(`chainId`: `StarknetChainId`) => `string`
+
+**Parameters**
+
+| Name      | Type              | Description                              |
+| :-------- | :---------------- | :--------------------------------------- |
+| `chainId` | `StarknetChainId` | chain on which the contract was deployed |
+
+**Returns**:
+
+A `string` representing the proof of personhood verifier contract address.
+
+##### getMulticallContract
+
+Retrieve the multicall contract address based on the chain ID.
+
+[🔗 View the source code on GitHub](https://github.com/starknet-id/composable_multicall)
+
+▸ utils.**getMulticallContract**(`chainId`: `StarknetChainId`) => `string`
+
+**Parameters**
+
+| Name      | Type              | Description                              |
+| :-------- | :---------------- | :--------------------------------------- |
+| `chainId` | `StarknetChainId` | chain on which the contract was deployed |
+
+**Returns**:
+
+A `string` representing the multicall contract address.
+
+```
+
+```
