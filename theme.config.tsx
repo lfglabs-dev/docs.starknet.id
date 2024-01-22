@@ -11,6 +11,12 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: "https://github.com/starknet-id/docs-starknet-id",
   footer: { component: null },
+  // to disable "- nextra" in page's title
+  useNextSeoProps() {
+    return {
+      titleTemplate: "%s",
+    };
+  },
 };
 
 export default config;
