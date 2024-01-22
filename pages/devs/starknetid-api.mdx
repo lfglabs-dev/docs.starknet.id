@@ -86,6 +86,62 @@ No domain found
 
 ---
 
+### Addresses to Domains
+
+Retrieve the associated domains for multiple addresses in a single request. This is particularly useful for applications like leaderboards or blockchain explorers where multiple addresses need to be resolved to their respective domains efficiently.
+
+**Method & URL**
+
+- HTTP Method: `POST`
+- API URL: `https://api.starknet.id/addrs_to_domains`
+
+**Request Body**
+
+The request body should be a JSON object containing a list of addresses under the key `addresses`.
+
+**Example Request Body**
+
+'''
+{
+  'addresses': [
+    '0x048F24D0D0618fa31813DB91a45d8be6c50749e5E19ec699092CE29aBe809294',
+    '0x00a00373A00352aa367058555149b573322910D54FCDf3a926E3E56D0dCb4b0c',
+    '0x00B325463D0dDCa69Bb6234CD6FCA161b35035F14386b6403a9De208E5a1C71b'
+  ]
+}
+'''
+
+**Response**
+
+The API will return a list of objects, each containing a domain and its associated address. If a domain is not found for an address, the domain key will be `null`.
+
+**Success Response Example**
+
+'''
+[
+  {
+    'domain': 'th0rgal.stark',
+    'address': '0x00a00373a00352aa367058555149b573322910d54fcdf3a926e3e56d0dcb4b0c'
+  },
+  {
+    'domain': 'asjosaok23.stark',
+    'address': '0x048f24d0d0618fa31813db91a45d8be6c50749e5e19ec699092ce29abe809294'
+  },
+  {
+    'domain': null,
+    'address': '0x00b325463d0ddca69bb6234cd6fca161b35035f14386b6403a9de208e5a1c71b'
+  }
+]
+'''
+
+**Error Response Example**
+
+'''
+Failed to parse the request body as JSON: addresses[1]: control character (\u0000-\u001F) found while parsing a string at line 5 column 0
+'''
+
+---
+
 ### Address to External Domains
 
 Retrieve the braavos and xplorer subdomain associated to an address.
