@@ -101,7 +101,7 @@ The request body should be a JSON object containing a list of addresses under th
 
 **Example Request Body**
 
-'''
+```json
 {
   'addresses': [
     '0x048F24D0D0618fa31813DB91a45d8be6c50749e5E19ec699092CE29aBe809294',
@@ -109,7 +109,7 @@ The request body should be a JSON object containing a list of addresses under th
     '0x00B325463D0dDCa69Bb6234CD6FCA161b35035F14386b6403a9De208E5a1C71b'
   ]
 }
-'''
+```
 
 **Response**
 
@@ -117,7 +117,7 @@ The API will return a list of objects, each containing a domain and its associat
 
 **Success Response Example**
 
-'''
+```json
 [
   {
     'domain': 'th0rgal.stark',
@@ -132,13 +132,13 @@ The API will return a list of objects, each containing a domain and its associat
     'address': '0x00b325463d0ddca69bb6234cd6fca161b35035f14386b6403a9de208e5a1c71b'
   }
 ]
-'''
+```
 
 **Error Response Example**
 
-'''
+```
 Failed to parse the request body as JSON: addresses[1]: control character (\u0000-\u001F) found while parsing a string at line 5 column 0
-'''
+```
 
 ---
 
