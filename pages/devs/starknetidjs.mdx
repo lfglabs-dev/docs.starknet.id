@@ -6,7 +6,7 @@ Starknetid.js is a JavaScript library that facilitates interaction with the Star
 
 ## Installation
 
-**Please note**: Version 3.0.0 of `starknetid.js` is only compatible with `testnet`. To use on `mainnet`, use `starknetid.js@2.0.0`.
+**Please note**: Use version 3.0.2 of `starknetid.js` for compatibility with both `testnet` and `mainnet`.
 
 ```bash
 # using npm
@@ -221,6 +221,32 @@ A `Promise`\<`string`\> representing the domain. Throws an error if the address 
 const domain = await starknetIdNavigator.getStarkName(
   "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3"
 );
+```
+
+#### getStarkNames
+
+Get Stark names from addresses.
+
+▸ StarknetIdNavigator.**getStarkNames**(`addresses`: `string[]`, `multicallContract`?: `string`) => `Promise`\<`string[]`\>
+
+**Parameters**:
+
+| Name                 | Type       | Description                 |
+| :------------------- | :--------- | :-------------------------- |
+| `addresses`          | `string[]` | The addresses to resolve    |
+| `multicallContract?` | `string`   | Optional multicall contract |
+
+**Returns**:
+
+A `Promise`\<`string[]`\> representing the domains. If an address is invalid or does not have a stark name, it will return an empty string.
+
+**Example usage**:
+
+```tsx
+const domains = await starknetIdNavigator.getStarkNames([
+  "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3",
+  "0x0302de76464d4e2447F2d1831fb0A1AF101B18F80964fCfff1aD831C0A92e1fD",
+]);
 ```
 
 #### getStarknetId
