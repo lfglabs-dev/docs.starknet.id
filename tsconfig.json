@@ -19,6 +19,6 @@
       "@components/*": ["components/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/architecture/naming/playground.mdx"],
   "exclude": ["node_modules"]
 }

@@ -1,25 +1,48 @@
-.decoder {
-  padding: 0.3rem 0.5rem;
-  border-radius: 0.5rem;
-  width: 180px;
-}
-
-.decoder::placeholder {
-  font-size: 0.875rem;
-  color: rgba(249, 250, 251, 0.6);
+.playground {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1rem;
+  margin-top: 3rem;
 }
 
 .container {
   position: relative;
+  width: 100%;
+}
+
+.encoder {
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.5rem;
+  width: 100%;
+}
+
+.encoder::placeholder {
+  font-size: 0.875rem;
+  color: rgba(249, 250, 251, 0.6);
 }
 
 .result {
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
-  position: absolute;
-  top: 50px;
-  left: 0;
-  right: 0;
   word-break: break-all;
-  padding: 1rem;
+  padding-top: 1rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.example {
+  opacity: 0.8;
+}
+
+.inputContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.copied {
+  margin-left: 1rem;
 }
