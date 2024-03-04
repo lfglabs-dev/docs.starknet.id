@@ -1,6 +1,7 @@
 import { FunctionComponent, useState } from "react";
 import styles from "../styles/decoder.module.css";
 import { utils } from "starknetid.js";
+import { basicAlphabet } from "utils/constants";
 
 type EncoderProps = {
   type: "encode" | "decode";
@@ -17,11 +18,24 @@ const Encoder: FunctionComponent<EncoderProps> = ({ type }) => {
       return;
     }
     if (type === "encode") {
+      if (domain.endsWith("."))
+        return setResult("Domain cannot end with a dot.");
+      if (
+        !domain
+          .split("")
+          .reduce(
+            (acc, x) => (acc && basicAlphabet.includes(x)) || x === ".",
+            true
+          )
+      )
+        return setResult("Invalid characters in domain.");
       const decoded = utils.encodeDomain(domain);
       setResult(decoded.toString());
     } else {
       try {
         const bigint = domain.split(",").map((x) => BigInt(x));
+        if (bigint.some((x) => x <= 0))
+          return setResult("Cannot decode negative or zero integers.");
         const encoded = utils.decodeDomain(bigint);
         setResult(encoded.toString());
       } catch {
@@ -46,24 +60,26 @@ const Encoder: FunctionComponent<EncoderProps> = ({ type }) => {
       <p className={styles.example}>
         {type === "encode" ? "e.g. nicolas.stark" : "e.g. 54220562821"}
       </p>
-      <div className={styles.inputContainer}>
-        <input
-          type="text"
-          className={styles.encoder}
-          placeholder={`${
-            type === "encode"
-              ? "Provide a domain"
-              : "Provide an integer or a list of integers"
-          }`}
-          value={domain}
-          onChange={(e) => setDomain(e.target.value)}
-          onKeyUp={onTypingEnd}
-        />
-        <div onClick={copyToClipboard} className={styles.copy}>
-          {copied ? "Copied!" : "Copy"}
+      <input
+        type="text"
+        className={styles.encoder}
+        placeholder={`${
+          type === "encode"
+            ? "Provide a domain"
+            : "Provide an integer or a list of integers"
+        }`}
+        value={domain}
+        onChange={(e) => setDomain(e.target.value)}
+        onKeyUp={onTypingEnd}
+      />
+      {result && (
+        <div className={styles.resultContainer}>
+          <div className={styles.result}>{result}</div>{" "}
+          <div onClick={copyToClipboard} className={styles.copy}>
+            {copied ? "Copied!" : "Copy"}
+          </div>
         </div>
-      </div>
-      {result && <div className={styles.result}>{result}</div>}
+      )}
     </div>
   );
 };

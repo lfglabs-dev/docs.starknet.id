@@ -15,6 +15,7 @@
   padding: 0.3rem 0.5rem;
   border-radius: 0.5rem;
   width: 100%;
+  margin-top: 1rem;
 }
 
 .encoder::placeholder {
@@ -24,7 +25,6 @@
 
 .result {
   word-break: break-all;
-  padding-top: 1rem;
 }
 
 .title {
@@ -36,15 +36,14 @@
   opacity: 0.8;
 }
 
-.inputContainer {
+.resultContainer {
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-top: 1rem;
+  padding-top: 1rem;
 }
 
 .copy {
-  margin-left: 1rem;
+  margin-left: 0.5rem;
   cursor: pointer;
   text-decoration: underline;
 }
