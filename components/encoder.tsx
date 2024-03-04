@@ -19,23 +19,22 @@ const Encoder: FunctionComponent<EncoderProps> = ({ type }) => {
     if (type === "encode") {
       const decoded = utils.encodeDomain(domain);
       setResult(decoded.toString());
-      // Copy to clipboard
-      navigator.clipboard.writeText(decoded.toString());
-      setCopied(true);
     } else {
       try {
         const bigint = domain.split(",").map((x) => BigInt(x));
         const encoded = utils.decodeDomain(bigint);
         setResult(encoded.toString());
-        // Copy to clipboard
-        navigator.clipboard.writeText(encoded.toString());
-        setCopied(true);
       } catch {
         setResult(
           "Invalid input. Please enter a comma-separated list of integers."
         );
       }
     }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(result);
+    setCopied(true);
     setTimeout(() => setCopied(false), 1000);
   };
 
@@ -60,7 +59,9 @@ const Encoder: FunctionComponent<EncoderProps> = ({ type }) => {
           onChange={(e) => setDomain(e.target.value)}
           onKeyUp={onTypingEnd}
         />
-        {copied && <div className={styles.copied}>Copied</div>}
+        <div onClick={copyToClipboard} className={styles.copy}>
+          {copied ? "Copied!" : "Copy"}
+        </div>
       </div>
       {result && <div className={styles.result}>{result}</div>}
     </div>

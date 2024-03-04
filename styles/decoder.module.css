@@ -43,6 +43,8 @@
   margin-top: 1rem;
 }
 
-.copied {
+.copy {
   margin-left: 1rem;
+  cursor: pointer;
+  text-decoration: underline;
 }
