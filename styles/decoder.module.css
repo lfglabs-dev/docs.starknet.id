@@ -1,0 +1,49 @@
+.playground {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1rem;
+  margin-top: 3rem;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+}
+
+.encoder {
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.5rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.encoder::placeholder {
+  font-size: 0.875rem;
+  color: rgba(249, 250, 251, 0.6);
+}
+
+.result {
+  word-break: break-all;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.example {
+  opacity: 0.8;
+}
+
+.resultContainer {
+  display: flex;
+  align-items: center;
+  padding-top: 1rem;
+}
+
+.copy {
+  margin-left: 0.5rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
