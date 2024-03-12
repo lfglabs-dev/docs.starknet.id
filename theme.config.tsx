@@ -12,6 +12,11 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: "https://github.com/starknet-id/docs-starknet-id",
   footer: { component: null },
+  useNextSeoProps() {
+    return {
+      titleTemplate: "%s",
+    };
+  },
   head: <HeadComponent />,
 };
 
