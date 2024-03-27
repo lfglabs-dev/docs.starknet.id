@@ -348,23 +348,83 @@ Retrieve the data of a Starknet ID.
 
 **Response**
 
-The API will retrieve the data (Social Media, Avatar, Proof of personhood...) of the Starknet ID.
+The API will retrieve the data written on the Starknet ID. If a domain is held by this id, `domain` will contain all its naming data. `verifier_data` and `extended_verifier_data` will contain identity data written through other smartcontracts. This data space is permissionless so it usually requires some interpretation to make sense, it could be twitter id, discord id, profile pics or anything else. 
 
 **Example request**
 
-`https://api.starknet.id/id_to_data?id=12`
+`https://api.starknet.id/id_to_data?id=1`
 
 **Success Response Example**
 
 ```json
 {
-  "domain": "66868.stark",
-  "addr": "0x016ebaaccb6a06c0c42be5d57b7dc0c86985af1aa73e9a17ecdda5df798813ae",
-  "domain_expiry": 1702361677,
-  "is_owner_main": false,
-  "owner_addr": "0x016ebaaccb6a06c0c42be5d57b7dc0c86985af1aa73e9a17ecdda5df798813ae",
-  "starknet_id": "12",
-  "img_url": null
+  "id": "0x0000000000000000000000000000000000000000000000000000000000000001",
+  "owner": "0x00a00373a00352aa367058555149b573322910d54fcdf3a926e3e56d0dcb4b0c",
+  "main": true,
+  "creation_date": 1669055689,
+  "domain": {
+    "domain": "th0rgal.stark",
+    "migrated": true,
+    "root": true,
+    "creation_date": 1669721226,
+    "expiry": 1732793226,
+    "resolver": null,
+    "legacy_address": "0x00a00373a00352aa367058555149b573322910d54fcdf3a926e3e56d0dcb4b0c",
+    "rev_address": null
+  },
+  "user_data": [],
+  "verifier_data": [
+    {
+      "verifier": "0x06ac597f8116f886fa1c97a23fa4e08299975ecaf6b598873ca6792b9bbfb678",
+      "field": "0x000000000000000000000000000000000000000000000000000000006e616d65",
+      "data": "0x01906b81b516288254d766bf5b743582ce3821769f4cc5e27a7dd73db94b4255"
+    },
+    {
+      "verifier": "0x002d5f0f2fcba62a54f0d8a73fb2e437d76c53f7297153b2afd1f198af6d12aa",
+      "field": "0x0000000000000000000000000000000000000000000000000000676974687562",
+      "data": "0x00000000000000000000000000000000000000000000000000000000027e4773"
+    },
+    {
+      "verifier": "0x0480258f58d43fb73936f803780047a0f6d0a563697d80bd3f95b603f9c8b1c8",
+      "field": "0x0000000000000000000000000000000000000000000000000000676974687562",
+      "data": "0x00000000000000000000000000000000000000000000000000000000027e4773"
+    },
+    {
+      "verifier": "0x002d5f0f2fcba62a54f0d8a73fb2e437d76c53f7297153b2afd1f198af6d12aa",
+      "field": "0x00000000000000000000000000000000000000000000000000646973636f7264",
+      "data": "0x0000000000000000000000000000000000000000000000000fcdaf97ff043001"
+    },
+    {
+      "verifier": "0x0480258f58d43fb73936f803780047a0f6d0a563697d80bd3f95b603f9c8b1c8",
+      "field": "0x00000000000000000000000000000000000000000000000000646973636f7264",
+      "data": "0x00000000000000000000000000000000000000000000000009d33f313202005d"
+    },
+    {
+      "verifier": "0x002d5f0f2fcba62a54f0d8a73fb2e437d76c53f7297153b2afd1f198af6d12aa",
+      "field": "0x0000000000000000000000000000000000000000000000000074776974746572",
+      "data": "0x0000000000000000000000000000000000000000000000000af4c5d88c167000"
+    },
+    {
+      "verifier": "0x0480258f58d43fb73936f803780047a0f6d0a563697d80bd3f95b603f9c8b1c8",
+      "field": "0x0000000000000000000000000000000000000000000000000074776974746572",
+      "data": "0x0000000000000000000000000000000000000000000000000af4c5d88c167000"
+    },
+    {
+      "verifier": "0x070aaa20ec4a46da57c932d9fd89ca5e6bb9ca3188d3df361a32306aff7d59c7",
+      "field": "0x00000000000000000000000000000000006e66745f70705f636f6e7472616374",
+      "data": "0x03ab1124ef9ec3a2f2b1d9838f9066f9a894483d40b33390dda8d85c01a315a3"
+    }
+  ],
+  "extended_verifier_data": [
+    {
+      "verifier": "0x070aaa20ec4a46da57c932d9fd89ca5e6bb9ca3188d3df361a32306aff7d59c7",
+      "field": "0x00000000000000000000000000000000000000000000006e66745f70705f6964",
+      "extended_data": [
+        "0x0000000000000000000000000000000000000000000000000000000000001b98",
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
+      ]
+    }
+  ]
 }
 ```
 
@@ -373,7 +433,7 @@ The API will retrieve the data (Social Media, Avatar, Proof of personhood...) of
 `https://api.starknet.id/id_to_data?id=10123891239013292`
 
 ```
-starknet id not found
+Identity not found
 ```
 
 ---
