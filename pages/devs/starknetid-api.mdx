@@ -455,7 +455,7 @@ Retrieve the data of a domain.
 
 **Response**
 
-The API will retrieve the data (Social Media, Avatar, Proof of personhood...) of the domain.
+Like the previous endpoint, API will retrieve everything related to an identity but via its associated domain.
 
 **Example request**
 
@@ -465,20 +465,73 @@ The API will retrieve the data (Social Media, Avatar, Proof of personhood...) of
 
 ```json
 {
-  "domain": "fricoben.stark",
-  "addr": "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3",
-  "domain_expiry": 1835881200,
-  "is_owner_main": true,
-  "owner_addr": "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3",
-  "github": "78437165",
-  "twitter": "1255853529866145794",
-  "discord": "662387807901188096",
-  "old_github": "78437165",
-  "old_twitter": "1255853529866145794",
-  "old_discord": "662387807901188096",
-  "proof_of_personhood": true,
-  "starknet_id": "8",
-  "img_url": "https://api.briq.construction/v1/preview/starknet-mainnet/0x2cfc5dbd15e395fd598f35bae2300322d0227760be5e9621000000000000000.png"
+  "id": "0x0000000000000000000000000000000000000000000000000000000000000001",
+  "owner": "0x00a00373a00352aa367058555149b573322910d54fcdf3a926e3e56d0dcb4b0c",
+  "main": true,
+  "creation_date": 1669055689,
+  "domain": {
+    "domain": "th0rgal.stark",
+    "migrated": true,
+    "root": true,
+    "creation_date": 1669721226,
+    "expiry": 1732793226,
+    "resolver": null,
+    "legacy_address": "0x00a00373a00352aa367058555149b573322910d54fcdf3a926e3e56d0dcb4b0c",
+    "rev_address": null
+  },
+  "user_data": [],
+  "verifier_data": [
+    {
+      "verifier": "0x06ac597f8116f886fa1c97a23fa4e08299975ecaf6b598873ca6792b9bbfb678",
+      "field": "0x000000000000000000000000000000000000000000000000000000006e616d65",
+      "data": "0x01906b81b516288254d766bf5b743582ce3821769f4cc5e27a7dd73db94b4255"
+    },
+    {
+      "verifier": "0x002d5f0f2fcba62a54f0d8a73fb2e437d76c53f7297153b2afd1f198af6d12aa",
+      "field": "0x0000000000000000000000000000000000000000000000000000676974687562",
+      "data": "0x00000000000000000000000000000000000000000000000000000000027e4773"
+    },
+    {
+      "verifier": "0x0480258f58d43fb73936f803780047a0f6d0a563697d80bd3f95b603f9c8b1c8",
+      "field": "0x0000000000000000000000000000000000000000000000000000676974687562",
+      "data": "0x00000000000000000000000000000000000000000000000000000000027e4773"
+    },
+    {
+      "verifier": "0x002d5f0f2fcba62a54f0d8a73fb2e437d76c53f7297153b2afd1f198af6d12aa",
+      "field": "0x00000000000000000000000000000000000000000000000000646973636f7264",
+      "data": "0x0000000000000000000000000000000000000000000000000fcdaf97ff043001"
+    },
+    {
+      "verifier": "0x0480258f58d43fb73936f803780047a0f6d0a563697d80bd3f95b603f9c8b1c8",
+      "field": "0x00000000000000000000000000000000000000000000000000646973636f7264",
+      "data": "0x00000000000000000000000000000000000000000000000009d33f313202005d"
+    },
+    {
+      "verifier": "0x002d5f0f2fcba62a54f0d8a73fb2e437d76c53f7297153b2afd1f198af6d12aa",
+      "field": "0x0000000000000000000000000000000000000000000000000074776974746572",
+      "data": "0x0000000000000000000000000000000000000000000000000af4c5d88c167000"
+    },
+    {
+      "verifier": "0x0480258f58d43fb73936f803780047a0f6d0a563697d80bd3f95b603f9c8b1c8",
+      "field": "0x0000000000000000000000000000000000000000000000000074776974746572",
+      "data": "0x0000000000000000000000000000000000000000000000000af4c5d88c167000"
+    },
+    {
+      "verifier": "0x070aaa20ec4a46da57c932d9fd89ca5e6bb9ca3188d3df361a32306aff7d59c7",
+      "field": "0x00000000000000000000000000000000006e66745f70705f636f6e7472616374",
+      "data": "0x03ab1124ef9ec3a2f2b1d9838f9066f9a894483d40b33390dda8d85c01a315a3"
+    }
+  ],
+  "extended_verifier_data": [
+    {
+      "verifier": "0x070aaa20ec4a46da57c932d9fd89ca5e6bb9ca3188d3df361a32306aff7d59c7",
+      "field": "0x00000000000000000000000000000000000000000000006e66745f70705f6964",
+      "extended_data": [
+        "0x0000000000000000000000000000000000000000000000000000000000001b98",
+        "0x0000000000000000000000000000000000000000000000000000000000000000"
+      ]
+    }
+  ]
 }
 ```
 
@@ -487,7 +540,7 @@ The API will retrieve the data (Social Media, Avatar, Proof of personhood...) of
 `https://api.starknet.id/domain_to_data?domain=qqqqqqqqqs.stark`
 
 ```
-Error while fetching from database
+Identity not found
 ```
 
 ---
