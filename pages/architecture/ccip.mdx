@@ -15,7 +15,3 @@ CCIP Read introduces a client-side protocol that triggers an `offchain_resolving
 When a name is looked up, the resolver responsible is called to resolve the name. It attempts to resolve the name but will throw an `offchain_resolving` error. This error contains instructions - `hints` - for the client to contact an external gateway. On successful completion of calling the gateway, it will attempt to resolve the name a second time with the response from the gateway. The resolver will verify the result from the gateway and confirm that the provided address is correct.
 
 ![img](/illustrations/ccip.webp)
-
-## Tutorial
-
-[EIP-3668](https://eips.ethereum.org/EIPS/eip-3668)
