@@ -1,5 +1,6 @@
 {
   "identity": "Identity NFT",
   "naming": "Stark Naming System",
-  "auto_renewal": "Automatic Renewal"
+  "auto_renewal": "Automatic Renewal",
+  "ccip": "Offchain Resolving"
 }

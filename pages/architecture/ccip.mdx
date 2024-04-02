@@ -1,0 +1,21 @@
+# Offchain Resolving
+
+The source of truth for a name and its subdomains does not always have to be on-chain. Starknet leverages a quite unintuitive concept : non-deterministic computation. This method enables the execution of operations offchain, leveraging more cost-efficient computing resources, and later verifying these operations onchain. A great application of this is the offchain resolving of domain names.
+
+Offchain resolving consists in a very similar idea applied to data fetching. Instead of performing data fetching directly on the blockchain, we retrieve the necessary data from offchain sources. This concept is not new and was discussed in [EIP-3668](https://eips.ethereum.org/EIPS/eip-3668), under the name "CCIP read," highlighting its utility in various applications, including domain name resolving. When attempting to resolve a domain name onchain that requires offchain data, the transaction is designed to fail and provide hints that will be used to fetch the necessary data, usually in the form of HTTP URLs. By incorporating this missing piece into a subsequent transaction, the smart contract can successfully resolve the domain name with the correct output.
+
+## How It Works
+
+### The Cross-Chain Interoperability Protocol (CCIP Read)
+
+CCIP Read introduces a client-side protocol that triggers an `offchain_resolving` error. This error serves as a signal for the client to initiate an offchain request, typically by contacting a specified gateway URL. The `starknetid.js` library seamlessly manages this process thought the `getAddressFromStarkName` function.
+
+### CCIP Read Flow
+
+When a name is looked up, the resolver responsible is called to resolve the name. It attempts to resolve the name but will throw an `offchain_resolving` error. This error contains instructions - `hints` - for the client to contact an external gateway. On successful completion of calling the gateway, it will attempt to resolve the name a second time with the response from the gateway. The resolver will verify the result from the gateway and confirm that the provided address is correct.
+
+![img](/illustrations/ccip.webp)
+
+## Tutorial
+
+[EIP-3668](https://eips.ethereum.org/EIPS/eip-3668)
