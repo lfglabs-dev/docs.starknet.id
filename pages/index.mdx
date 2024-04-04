@@ -14,32 +14,24 @@ When a user registers a stark name with Starknet.ID, this information is accessi
 
 ## Get Started
 
-import CodeIcon from '@components/icons/code.svg'
-import GlobeIcon from '@components/icons/globe.svg'
-import IdCardIcon from '@components/icons/id-card.svg'
-import LinkIcon from '@components/icons/link.svg'
-import LightningIcon from '@components/icons/lightning.svg'  // Using the lightning icon for FAQs
-import { Card, Cards } from 'nextra/components'
+import CodeIcon from "@components/icons/code.svg";
+import GlobeIcon from "@components/icons/globe.svg";
+import IdCardIcon from "@components/icons/id-card.svg";
+import LinkIcon from "@components/icons/link.svg";
+import LightningIcon from "@components/icons/lightning.svg"; // Using the lightning icon for FAQs
+import { Card, Cards } from "nextra/components";
 
 <Cards>
-  <Card
-    icon={<IdCardIcon />}
-    title="Core Concepts"
-    href="/users/features"
-  />
+  <Card icon={<IdCardIcon />} title="Core Concepts" href="/core/protocol" />
   <Card
     icon={<GlobeIcon />}
     title="Starknet.ID ecosystem"
     href="/ecosystem/integrations"
   />
-  <Card
-    icon={<CodeIcon />}
-    title="Developer Guide"
-    href="/devs/devs"
-  />
+  <Card icon={<CodeIcon />} title="Developer Guide" href="/devs/starknetidjs" />
   <Card
     icon={<LinkIcon />}
     title="Architecture"
-    href="/architecture/architecture"
+    href="/architecture/identity"
   />
 </Cards>
