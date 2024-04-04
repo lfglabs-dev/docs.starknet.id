@@ -1,0 +1,289 @@
+# Tutorial: Implementing CCIP Read with the Notion API
+
+If you own a domain, Starknet ID allows you to create as many subdomains as you want. You can even create a smartcontract which manages your subdomains (it is called a resolver contract). This tutorial shows you how to connect such a smartcontract to off chain data. In this example we do it with Notion so you can create free subdomains like iris.notion.stark in a notion table without having to send any transaction. To know more about how it works, check out [offchain resolving](https://docs.starknet.id/architecture/ccip)
+
+## Initial Setup
+
+First, we need to prepare our data source and domain:
+
+1. **Create a Public Page on Notion**: Begin by setting up a public page in Notion. For example, here's a [sample page](https://www.notion.so/c415880e74ff4769ab17510bd434d80d?pvs=21) I've prepared. This page includes a table with two columns: `domain` and `address`. This structure allows us to map domain names to specific addresses.
+2. **Capture Your Database ID**: After setting up your table, note the `database_id`; it's crucial for our API to interact with this Notion page later on.
+3. **Integrate with Notion**: Create an integration on Notion to enable our resolver to query the Notion database programmatically. You can find the steps to do this in the [Notion Developers Guide](https://developers.notion.com/docs/create-a-notion-integration).
+4. **Domain Registration**: Purchase the `notion.stark` domain through [starknet.id](http://app.starknet.id/). This domain will serve as the root for any subdomains we wish to resolve using our system.
+
+The objective here is to directly add domains and addresses into our Notion page and use them onchain. For instance, enabling transactions to `test.notion.stark` without requiring onchain confirmation of domain ownership simplifies managing and updating domain records.
+
+## Resolver Contract
+
+At the heart of our system is the resolver contract. It will implement a `resolve` function, invoked by the `starknet.id` naming contract to map a domain to its corresponding address onchain.
+
+### Setting Up Your Cairo Project
+
+Begin by creating a new package using Scarb:
+
+```shell
+scarb new resolver_contract
+```
+
+Our contract will be pretty simple, it will only have one function : `resolve`
+
+```rust
+#[starknet::interface]
+trait IResolver<TContractState> {
+    fn resolve(
+        self: @TContractState, domain: Span<felt252>, field: felt252, hint: Span<felt252>
+    ) -> felt252;
+}
+```
+
+### The `resolve` Function
+
+The resolve function will handle two scenarios when attempting to resolve a domain:
+
+- **No Hints Provided**: When the `resolve`\*function is called without any hints, the contract will trigger a panic, returning an error that signals the need for offchain resolving. This error is an array of short strings. The first element should always be `offchain_resolving` followed by the URL of your api which is predetermined and passed in the constructor of your contract.
+
+- **Hints Provided**: In scenarios where hints are provided, the contract will expect four hints: the address the domain resolves to, a signature (`r` and `s`), and a max validity timestamp. The contract will then perform the following checks:
+  - **Timestamp Verification**: Ensures the current block timestamp is less than the provided max validity timestamp, ensuring the data is not outdated
+  - **Message Hash Construction**: Constructs a message hash using the domain, field, max validity timestamp, and the resolved address. This hash serves as the basis for signature verification.
+  - **Signature Verification**: Verifies the provided signature against the constructed message hash and a public key stored in the contract. This public key is added to the contract at the time of deployment.
+
+### Code Implementation
+
+Here's a more detailed implementation of the `resolve` function:
+
+```ts
+fn resolve(
+        self: @TContractState, domain: Span<felt252>, field: felt252, hint: Span<felt252>
+    ) -> felt252 {
+        if hint.len() != 4 {
+            panic(self.get_uri(array!['offchain_resolving']));
+        }
+
+        // Ensure the timestamp is valid and not expired
+        let max_validity = *hint.at(3);
+        assert(get_block_timestamp() < max_validity.try_into().unwrap(), 'Signature expired');
+
+        // Hash the domain and construct the message hash for signature verification
+        let hashed_domain = self.hash_domain(domain);
+        let message_hash: felt252 = hash::LegacyHash::hash(
+            hash::LegacyHash::hash(
+                hash::LegacyHash::hash(
+                    hash::LegacyHash::hash('ccip_demo resolving', max_validity), hashed_domain
+                ),
+                field
+            ),
+            *hint.at(0)
+        );
+
+        // Verify the signature with the provided public key
+        let public_key = self.public_key.read();
+        let is_valid = check_ecdsa_signature(
+            message_hash, public_key, *hint.at(1), *hint.at(2)
+        );
+        assert(is_valid, 'Invalid signature');
+
+        // Return the address the domain resolves to
+        return *hint.at(0);
+    }
+```
+
+🔗 For a comprehensive overview of the contract's code, visit the repository: [starknet-id/resolver_ccip](https://github.com/starknet-id/resolver_ccip)
+
+## Building the Offchain Resolver API with Rust
+
+### Setting Up Your Rust Project
+
+Initialize a new Rust project if you haven't already:
+
+```bash
+cargo new offchain_resolver_api
+```
+
+Add the necessary dependencies to your `Cargo.toml` file:
+
+```toml
+[dependencies]
+axum = "0.5"
+reqwest = "0.11"
+chrono = "0.4"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+starknet = "0.1.0"
+lazy_static = "1.4"
+```
+
+### Define Your Application State and Models
+
+**AppState Configuration**: Create structures to hold your application's configuration, including the Notion API key and database ID. See the [`config.toml` template file](https://github.com/starknet-id/api.ccip-demo.starknet.id/blob/master/config.template.toml) for reference.
+
+```rust
+// Inside src/models.rs
+use serde::{Deserialize, Serialize};
+
+#[derive(Clone)]
+pub struct AppState {
+    pub conf: AppConfig,
+}
+
+#[derive(Clone)]
+pub struct AppConfig {
+    pub notion: NotionConfig,
+    pub starknet: StarkNetConfig,
+}
+
+#[derive(Clone)]
+pub struct NotionConfig {
+    pub secret: String,
+    pub database_id: String,
+}
+
+#[derive(Clone)]
+pub struct StarkNetConfig {
+    pub private_key: String,
+}
+```
+
+**ResolveQuery**: Represents the incoming query parameters for your API.
+
+```rust
+// Continue in src/models.rs
+#[derive(Deserialize)]
+pub struct ResolveQuery {
+    pub domain: String,
+}
+```
+
+### Implementing the Resolve Endpoint
+
+This endpoint's function is to take a subdomain (e.g., `test.notion.stark`) as input, query the Notion database for corresponding entries, and return the resolved address along with a signature and a max validity timestamp.
+
+**Querying the Notion Database**: First, construct a request to the Notion API, targeting the database you created earlier where your domain data is stored. This request filters entries by the domain name provided in the query to find the matching entry.
+
+```rust
+let url = format!("https://api.notion.com/v1/databases/{}/query", state.conf.notion.database_id);
+let client = reqwest::Client::new();
+let mut headers = HeaderMap::new();
+headers.insert("Notion-Version", HeaderValue::from_static("2022-06-28"));
+headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+
+let token = format!("Bearer {}", state.conf.notion.secret.clone());
+headers.insert(AUTHORIZATION, HeaderValue::from_str(&token).unwrap());
+
+// Create the JSON payload
+let payload =
+    json!({
+        "filter": {
+            "property": "Domain",
+            "title": {
+                "equals": query.domain
+            }
+        }
+    });
+
+match client.post(&url).headers(headers).json(&payload).send().await {
+    Ok(response) =>
+        match response.json::<ApiResponse>().await {
+            // Extract the address from the response
+        }
+}
+```
+
+Upon receiving a response from the Notion API, the endpoint checks for the existence of the queried domain within the returned data. If found, it extracts the address associated with this domain.
+
+**Signing the Response**: With the address in hand, the endpoint prepares a message hash using `pedersen_hash` including a predefined string ( `ccip_demo resolving`), the maximum validity in seconds of the response, the hashed subdomain, the field (here we use `starknet`) and the address obtained from Notion.
+
+```rust
+let hash = pedersen_hash(
+    &pedersen_hash(
+        &pedersen_hash(
+            &pedersen_hash(
+                &HASH_NAME,
+                &FieldElement::from_dec_str(max_validity_seconds.to_string().as_str()).unwrap()
+            ),
+            &hashed_domain
+        ),
+        &FIELD_STARKNET
+    ),
+    &FieldElement::from_hex_be(address).unwrap()
+);
+```
+
+This message is then signed using the server's private key.
+
+Finally we return the address, the signature (`r` and `s`) and the `max_validity` timestamp. The response is sent back to the caller, who can then use it to complete the offchain resolving process.
+
+```rust
+match ecdsa_sign(&state.conf.starknet.private_key, &hash) {
+    Ok(signature) =>
+        (
+            StatusCode::OK,
+            Json(
+                json!({"address": address, "r": signature.r, "s": signature.s, "max_validity": max_validity_seconds})
+            ),
+        ).into_response(),
+    Err(e) => get_error(format!("Error while generating signature: {}", e)),
+}
+```
+
+🔗 For the complete code and further details, visit the repository: [starknet-id/api.ccip-demo.starknet.id](https://github.com/starknet-id/api.ccip-demo.starknet.id)
+
+## Deploy & Set Up Your Domain & Resolver
+
+### Generating your private and public key
+
+Begin by generating a private key and a corresponding public key. You can use the following Python script:
+
+```python
+#!/usr/bin/env python3
+from starkware.crypto.signature.signature import private_to_stark_key, get_random_private_key
+
+priv_key = get_random_private_key()
+print("priv_key:", hex(priv_key))
+
+pub_key = private_to_stark_key(priv_key)
+print("pub_key:", hex(pub_key))
+```
+
+### Api deployment
+
+Deploy your API using the generated private key along with your Notion credentials (database ID and secret).
+
+### Resolver Contract Deployment
+
+Deploy your resolver contract with the public key and the URL of your API endpoint. Ensure your API's endpoint is structured to append the domain name directly to the query, such as `https://sepolia.api.ccip-demo.starknet.id/resolve?domain=`. This setup enables the `getAddressFromStarkName` function from `starknetid.js`, used later in the frontend, to function seamlessly.
+
+### Domain Resolver Configuration
+
+With your resolver contract deployed, you can now set it as the resolver for your domain name. This configuration can be done directly through [Voyager](https://sepolia.voyager.online/contract/0x0707f09bc576bd7cfee59694846291047e965f4184fe13dac62c56759b3b6fa7#writeContract) by specifying the `set_domain_to_resolver` function with the appropriate raw calldata:
+
+- **Domain as an Array**: Include your domain's length and its encoded value. StarkNet ID utilizes a specific encoding algorithm. To encode your domain, you can use [Starknet ID encoding playground](https://docs.starknet.id/architecture/naming/playground). For example, if encoding `notion.stark` results in `1059716045`, you would send `1` as the array length and `1059716045` as the content.
+- **Resolver Contract Address**: Add the address of the deployed resolver contract.
+
+Example calldata input:
+
+```shell
+1, 1059716045, 0x0153be68cf8fc71138610811dd2b4fa481eb99f3eedcb3fce7369569055be275
+```
+
+From a contract perspective we’re all set. If you try to call `domain_to_address` of the naming contract on a subdomain `test.notion.stark` it will fail with an error starting by `offchain_resolving`
+
+```bash
+LibraryError: RPC: starknet_call with params {"request":{"contract_address":"0x0707f09bc576bd7cfee59694846291047e965f4184fe13dac62c56759b3b6fa7","entry_point_selector":"0x2e269d930f6d7ab92b15ce8ff9f5e63709391617e3465fff79ba6baf278ce60","calldata":["0x2","0xf41de","0x3f29fbcd","0x0"]},"block_id":"pending"}
+ 40: Contract error: {"revert_error":"Error in the called contract (0x0707f09bc576bd7cfee59694846291047e965f4184fe13dac62c56759b3b6fa7):\nError at pc=0:16405:\nGot an exception while executing a hint: Execution failed. Failure reason: (0x6f6666636861696e5f7265736f6c76696e67 ('offchain_resolving'), 0x68747470733a2f2f7365706f6c69612e6170692e636369702d64656d6f2e73 ('https://sepolia.api.ccip-demo.s'), 0x7461726b6e65742e69642f7265736f6c76653f646f6d61696e3d ('tarknet.id/resolve?domain=')).\nCairo traceback (most recent call last):\nUnknown location (pc=0:304)\nUnknown location (pc=0:5803)\nUnknown location (pc=0:11494)\n\nError in the called contract (0x0153be68cf8fc71138610811dd2b4fa481eb99f3eedcb3fce7369569055be275):\nExecution failed. Failure reason: (0x6f6666636861696e5f7265736f6c76696e67 ('offchain_resolving'), 0x68747470733a2f2f7365706f6c69612e6170692e636369702d64656d6f2e73 ('https://sepolia.api.ccip-demo.s'), 0x7461726b6e65742e69642f7265736f6c76653f646f6d61696e3d ('tarknet.id/resolve?domain=')).\n"}
+    at RpcProvider.errorHandler (index.mjs:2753:13)
+    at RpcProvider.fetchEndpoint (index.mjs:2769:12)
+    at async RpcProvider.callContract (index.mjs:3144:20)
+    at async tryResolveDomainSID (resolvingForm.tsx:85:25)
+    at async getAddressFromStarkName (resolvingForm.tsx:45:14)
+    at async submit (resolvingForm.tsx:33:22)
+```
+
+## Setting Up the Frontend
+
+Integrating offchain resolving into your frontend application is streamlined and efficient, thanks to the `getAddressFromStarkName` function provided in `starknetid.js`. This function seamlessly manages the offchain resolving process, ensuring a smooth user experience.
+
+🔗 You can refer to the [starknetid.js documentation](https://docs.starknet.id/devs/starknetidjs#getaddressfromstarkname)
+
+### Testing the Demo
+
+🔗 To see the offchain resolver in action, [visit the live demo](https://goerli-ccip-demo-starknet-id.vercel.app/)
