@@ -2,6 +2,6 @@
   "identity": "Identity NFT",
   "naming": "Stark Naming System",
   "auto_renewal": "Subscription",
-  "ccip": "CCIP",
+  "ccip": "Offchain Resolving",
   "audits": "Audits"
 }
