@@ -79,10 +79,10 @@ const ConnectButton: FunctionComponent = () => {
     return new StarknetIdNavigator(
       new Provider({
         rpc: {
-          nodeUrl: `https://starknet-goerli.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
+          nodeUrl: `https://starknet-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
         },
       }),
-      constants.StarknetChainId.SN_GOERLI
+      constants.StarknetChainId.SN_SEPOLIA
     );
   }, []);
 
@@ -144,6 +144,28 @@ const ConnectButton: FunctionComponent = () => {
 };
 
 export default ConnectButton;
+```
+
+#### Leaderboard
+
+With the [`getStarkProfiles`](https://docs.starknet.id/devs/starknetidjs#getstarkprofiles) function, you can retrieve the starkname and profile picture URL of a list of addresses. This is useful for displaying a leaderboard with user stark names and profile pictures.
+
+```tsx
+const addresses = [
+  "0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3",
+  "0x0302de76464d4e2447F2d1831fb0A1AF101B18F80964fCfff1aD831C0A92e1fD",
+];
+const starknetIdNavigator = new StarknetIdNavigator(
+  new Provider({
+    rpc: {
+      nodeUrl: `https://starknet-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_KEY}`,
+    },
+  }),
+  constants.StarknetChainId.SN_SEPOLIA
+);
+const profiles: StarkProfile[] = await starknetIdNavigator?.getStarkProfiles(
+  addresses
+);
 ```
 
 #### Using custom contracts
@@ -479,6 +501,36 @@ type StarkProfile = {
 
 - Throws an error if address is invalid.
 
+#### getStarkProfiles
+
+Get the starkname and profile picture url of a list of addresses. If no specific verifiers are provided, it defaults to using the starknet.id profile picture verifier contract address. You can disable getting the default profile picture by setting `useDefaultPfp` to false.
+
+▸ StarknetIdNavigator.**getStarkProfiles**(`address`: `string`, `useDefaultPfp`?: `boolean`, `pfp_verifier`?: `string`) => `Promise`\<`StarkProfile[]`\>
+
+**Parameters**:
+
+| Name            | Type      | Description                                            |
+| :-------------- | :-------- | :----------------------------------------------------- |
+| `address`       | `string`  | Hexadecimal account address                            |
+| `useDefaultPfp` | `boolean` | Get default pfp url if none was set by the user        |
+| `pfp_verifier?` | `string`  | Optional contract address for profile picture verifier |
+
+**Returns**:
+
+A `Promise`\<`StarkProfile[]`\> representing the Starknet profile data of the user. The StarkProfile includes starkname, profile picture URL.
+
+```
+type StarkProfile = {
+  name?: string;
+  profilePicture?: string;
+};
+```
+
+**Errors**:
+
+- If the address is invalid, or the address doesn't own a domain it will return a `StarkProfile` with `name` and `profilePicture` as undefined.
+- If the address doesn't have a profile picture set, it will return a `StarkProfile` with `profilePicture` as undefined if `useDefaultPfp` is set to false.
+
 ### Utils
 
 #### Encoding and Decoding
@@ -696,7 +748,3 @@ Retrieve the multicall contract address based on the chain ID.
 **Returns**:
 
 A `string` representing the multicall contract address.
-
-```
-
-```
