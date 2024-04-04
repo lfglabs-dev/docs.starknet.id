@@ -10,17 +10,39 @@ Starknet.ID serves as a versatile passport for Starknet, facilitating seamless s
 
 When a user registers a stark name with Starknet.ID, this information is accessible across different all the Starknet Ecosystem. This means that every app will share the Starknet ID info and could use/display it instead of asking users to create their profile again.
 
-## How to Navigate the Docs?
-
-- **For Users**: Understand how to use the website, create an ID, and mint a domain. Ideal if you're looking to explore the Starknet.ID platform and its features.
-
-- **For Developers**: Dive deep into integrating Starknet.ID into your dApp and making it compatible with Stark domains. Perfect for developers eager to leverage the Starknet.ID ecosystem.
-
-- **Architecture**: Curious about the intricacies? Explore how the Starknet.ID ecosystem is structured and the underlying technology.
-
 ---
 
-### Get Started Now
+### Get Started
 
-- [Connect to the Dapp](https://app.starknet.id/) if you're a user wanting to dive in.
-- If you're a developer and want to integrate StarknetID, [check out the developer section](./developers-integration.md) for more details.
+import GlobeIcon from '@components/icons/globe.svg'
+import IdCardIcon from '@components/icons/id-card.svg'
+import LightningIcon from '@components/icons/lightning.svg'  // Using the lightning icon for FAQs
+import { Card, Cards } from 'nextra/components'
+
+<Cards>
+  <Card
+    icon={<GlobeIcon />}
+    title="Core Concepts"
+    href="/users/concepts"
+  />
+  <Card
+    icon={<IdCardIcon />}
+    title="Starknet.ID ecosystem"
+    href="/ecosystem/integrations"
+  />
+  <Card
+    icon={<LightningIcon />}
+    title="Developer Guide"
+    href="/devs/devs"
+  />
+  <Card
+    icon={<GlobeIcon />}
+    title="Architecture"
+    href="/architecture/architecture"
+  />
+  <Card
+    icon={<GlobeIcon />}
+    title="Resources"
+    href="/resources/resources"
+  />
+</Cards>

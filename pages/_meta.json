@@ -1,8 +1,10 @@
 {
-  "index": "Introduction",
-  "users": "For users",
-  "devs": "For devs",
+  "index": "Overview",
+  "users": "Core Concepts",
+  "ecosystem": "Starknet.ID Ecosystem",
+  "devs": "Developer Integration",
   "architecture": "Architecture",
+  "resources": "Resources",
   "contact": {
     "title": "Contact ↗",
     "type": "page",
