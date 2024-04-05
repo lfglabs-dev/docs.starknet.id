@@ -1,6 +1,6 @@
 # Tutorial: Implementing CCIP Read with the Notion API
 
-If you own a domain, Starknet ID allows you to create as many subdomains as you want. You can even create a smartcontract which manages your subdomains (it is called a resolver contract). This tutorial shows you how to connect such a smartcontract to off chain data. In this example we do it with Notion so you can create free subdomains like iris.notion.stark in a notion table without having to send any transaction. To know more about how it works, check out [offchain resolving](https://docs.starknet.id/architecture/ccip)
+If you own a domain, Starknet ID allows you to create as many subdomains as you want. You can even create a smartcontract which manages your subdomains (it is called a resolver contract). This tutorial shows you how to connect such a smartcontract to off chain data. In this example we do it with Notion so you can create free subdomains like iris.notion.stark in a notion table without having to send any transaction. To know more about how it works, check out [offchain resolving](https://docs.Starknet ID/architecture/ccip)
 
 ## Initial Setup
 
@@ -9,13 +9,13 @@ First, we need to prepare our data source and domain:
 1. **Create a Public Page on Notion**: Begin by setting up a public page in Notion. For example, here's a [sample page](https://www.notion.so/c415880e74ff4769ab17510bd434d80d?pvs=21) I've prepared. This page includes a table with two columns: `domain` and `address`. This structure allows us to map domain names to specific addresses.
 2. **Capture Your Database ID**: After setting up your table, note the `database_id`; it's crucial for our API to interact with this Notion page later on.
 3. **Integrate with Notion**: Create an integration on Notion to enable our resolver to query the Notion database programmatically. You can find the steps to do this in the [Notion Developers Guide](https://developers.notion.com/docs/create-a-notion-integration).
-4. **Domain Registration**: Purchase the `notion.stark` domain through [starknet.id](http://app.starknet.id/). This domain will serve as the root for any subdomains we wish to resolve using our system.
+4. **Domain Registration**: Purchase the `notion.stark` domain through [Starknet ID](http://app.Starknet ID/). This domain will serve as the root for any subdomains we wish to resolve using our system.
 
 The objective here is to directly add domains and addresses into our Notion page and use them onchain. For instance, enabling transactions to `test.notion.stark` without requiring onchain confirmation of domain ownership simplifies managing and updating domain records.
 
 ## Resolver Contract
 
-At the heart of our system is the resolver contract. It will implement a `resolve` function, invoked by the `starknet.id` naming contract to map a domain to its corresponding address onchain.
+At the heart of our system is the resolver contract. It will implement a `resolve` function, invoked by the `Starknet ID` naming contract to map a domain to its corresponding address onchain.
 
 ### Setting Up Your Cairo Project
 
@@ -114,7 +114,7 @@ lazy_static = "1.4"
 
 ### Define Your Application State and Models
 
-**AppState Configuration**: Create structures to hold your application's configuration, including the Notion API key and database ID. See the [`config.toml` template file](https://github.com/starknet-id/api.ccip-demo.starknet.id/blob/master/config.template.toml) for reference.
+**AppState Configuration**: Create structures to hold your application's configuration, including the Notion API key and database ID. See the [`config.toml` template file](https://github.com/starknet-id/api.ccip-demo.Starknet ID/blob/master/config.template.toml) for reference.
 
 ```rust
 // Inside src/models.rs
@@ -225,7 +225,7 @@ match ecdsa_sign(&state.conf.starknet.private_key, &hash) {
 }
 ```
 
-🔗 For the complete code and further details, visit the repository: [starknet-id/api.ccip-demo.starknet.id](https://github.com/starknet-id/api.ccip-demo.starknet.id)
+🔗 For the complete code and further details, visit the repository: [starknet-id/api.ccip-demo.Starknet ID](https://github.com/starknet-id/api.ccip-demo.Starknet ID)
 
 ## Deploy & Set Up Your Domain & Resolver
 
@@ -250,13 +250,13 @@ Deploy your API using the generated private key along with your Notion credentia
 
 ### Resolver Contract Deployment
 
-Deploy your resolver contract with the public key and the URL of your API endpoint. Ensure your API's endpoint is structured to append the domain name directly to the query, such as `https://sepolia.api.ccip-demo.starknet.id/resolve?domain=`. This setup enables the `getAddressFromStarkName` function from `starknetid.js`, used later in the frontend, to function seamlessly.
+Deploy your resolver contract with the public key and the URL of your API endpoint. Ensure your API's endpoint is structured to append the domain name directly to the query, such as `https://sepolia.api.ccip-demo.Starknet ID/resolve?domain=`. This setup enables the `getAddressFromStarkName` function from `starknetid.js`, used later in the frontend, to function seamlessly.
 
 ### Domain Resolver Configuration
 
 With your resolver contract deployed, you can now set it as the resolver for your domain name. This configuration can be done directly through [Voyager](https://sepolia.voyager.online/contract/0x0707f09bc576bd7cfee59694846291047e965f4184fe13dac62c56759b3b6fa7#writeContract) by specifying the `set_domain_to_resolver` function with the appropriate raw calldata:
 
-- **Domain as an Array**: Include your domain's length and its encoded value. StarkNet ID utilizes a specific encoding algorithm. To encode your domain, you can use [Starknet ID encoding playground](https://docs.starknet.id/architecture/naming/playground). For example, if encoding `notion.stark` results in `1059716045`, you would send `1` as the array length and `1059716045` as the content.
+- **Domain as an Array**: Include your domain's length and its encoded value. StarkNet ID utilizes a specific encoding algorithm. To encode your domain, you can use [Starknet ID encoding playground](https://docs.Starknet ID/architecture/naming/playground). For example, if encoding `notion.stark` results in `1059716045`, you would send `1` as the array length and `1059716045` as the content.
 - **Resolver Contract Address**: Add the address of the deployed resolver contract.
 
 Example calldata input:
@@ -282,7 +282,7 @@ LibraryError: RPC: starknet_call with params {"request":{"contract_address":"0x0
 
 Integrating offchain resolving into your frontend application is streamlined and efficient, thanks to the `getAddressFromStarkName` function provided in `starknetid.js`. This function seamlessly manages the offchain resolving process, ensuring a smooth user experience.
 
-🔗 You can refer to the [starknetid.js documentation](https://docs.starknet.id/devs/starknetidjs#getaddressfromstarkname)
+🔗 You can refer to the [starknetid.js documentation](https://docs.Starknet.id/devs/starknetidjs#getaddressfromstarkname)
 
 ### Testing the Demo
 

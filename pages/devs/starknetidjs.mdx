@@ -1,6 +1,6 @@
-# Starknet.ID SDK
+# Starknet ID SDK
 
-Starknetid.js is a JavaScript library that facilitates interaction with the Starknet.id protocol. Whether you're a dApp developer or a blockchain enthusiast, this library provides utility functions to seamlessly integrate Starknet.id into your projects.
+Starknetid.js is a JavaScript library that facilitates interaction with the Starknet ID protocol. Whether you're a dApp developer or a blockchain enthusiast, this library provides utility functions to seamlessly integrate Starknet ID into your projects.
 
 [🔗 View the source code on GitHub](https://github.com/starknet-id/starknetid.js)
 
@@ -22,7 +22,7 @@ yarn install starknetid.js starknet@next
 
 #### Basic usage
 
-Import `StarknetIdNavigator` to access various Starknet.id functions. Initialize it with a **provider** and a **chain ID**.
+Import `StarknetIdNavigator` to access various Starknet ID functions. Initialize it with a **provider** and a **chain ID**.
 
 ##### With Starknet.js
 
@@ -332,7 +332,7 @@ A `Promise`\<`BigInt[]`\> representing the user unbounded data. Throws an error 
 
 #### getVerifierData
 
-Get verifier data from starknet id, address or domain. If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
+Get verifier data from starknet id, address or domain. If no verifier contract is provided, it will return the Starknet ID verifier contract address deployed on the StarknetIdNavigator provider chain id.
 
 ▸ StarknetIdNavigator.**getVerifierData**(`idDomainOrAddr`: `string`, `field`:
 `string`, `verifier`?: `string`) => `Promise`\<`BigInt`\>
@@ -365,7 +365,7 @@ const data = await starknetIdNavigator.getVerifierData(
 
 #### getExtendedVerifierData
 
-Get extended verifier data from starknet id, address or domain. Use this function to retrieve an array knowing its size. It will return zeros if not written. If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
+Get extended verifier data from starknet id, address or domain. Use this function to retrieve an array knowing its size. It will return zeros if not written. If no verifier contract is provided, it will return the Starknet ID verifier contract address deployed on the StarknetIdNavigator provider chain id.
 
 ▸ StarknetIdNavigator.**getExtendedVerifierData**(`idDomainOrAddr`: `string`,
 `field`: `string`, `length`: `number`, `verifier`?: `string`) => `Promise`\<`BigInt[]`\>
@@ -400,7 +400,7 @@ const data = await starknetIdNavigator.getExtendedVerifierData(
 
 #### getUnboundedVerifierData
 
-Get User unbounded data from starknet id, address or domain. Use this function to retrieve an array up to zero (not included). If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
+Get User unbounded data from starknet id, address or domain. Use this function to retrieve an array up to zero (not included). If no verifier contract is provided, it will return the Starknet ID verifier contract address deployed on the StarknetIdNavigator provider chain id.
 
 ▸ StarknetIdNavigator.**getUnboundedVerifierData**(`idDomainOrAddr`: `string`,
 `field`: `string`, `verifier`?: `string`) => `Promise`\<`BigInt[]`\>
@@ -424,7 +424,7 @@ A `Promise`\<`BigInt[]`\> representing the user unbounded verifier data. Throws 
 
 #### getPfpVerifierData
 
-Get User profile picture verifier data from starknet id, address or domain. Use this function to retrieve an array containing user domain, NFT contract address and NFT token id. If no verifier contract is provided, it will return the starknet.id verifier contract address deployed on the StarknetIdNavigator provider chain id.
+Get User profile picture verifier data from starknet id, address or domain. Use this function to retrieve an array containing user domain, NFT contract address and NFT token id. If no verifier contract is provided, it will return the Starknet ID verifier contract address deployed on the StarknetIdNavigator provider chain id.
 
 ▸ StarknetIdNavigator.**getPfpVerifierData**(`idDomainOrAddr`: `string`, `verifier`?: `string`) => `Promise`\<`BigInt[]`\>
 
@@ -446,7 +446,7 @@ A `Promise`\<`BigInt[]`\> representing the user profile picture verifier data. T
 
 #### getProfileData
 
-Get user Starknet profile data from their address. This function retrieves a user's starkname, profile picture URL, social networks IDs, and proof of personhood verification status. If no specific verifiers are provided, it defaults to using the starknet.id verifiers contract addresses. You can disable getting the default profile picture by setting `useDefaultPfp` to false.
+Get user Starknet profile data from their address. This function retrieves a user's starkname, profile picture URL, social networks IDs, and proof of personhood verification status. If no specific verifiers are provided, it defaults to using the Starknet ID verifiers contract addresses. You can disable getting the default profile picture by setting `useDefaultPfp` to false.
 
 ▸ StarknetIdNavigator.**getProfileData**(`address`: `string`, `useDefaultPfp`?: `boolean`, `verifier`?: `string`, `pfp_verifier`?: `string`, `pop_verifier`?: `string`) => `Promise`\<`StarkProfile`\>
 
@@ -485,7 +485,7 @@ type StarkProfile = {
 
 ##### decodeDomain
 
-Converts an encoded Starknet.id domain represented as an array of big integers into a string representation.
+Converts an encoded Starknet ID domain represented as an array of big integers into a string representation.
 
 ▸ utils.**decodeDomain**(`encoded`: `BigInt`[]) => `string`
 
@@ -519,7 +519,7 @@ A `BigInt[]` representing the encoded domain.
 
 ##### isStarkDomain
 
-Checks if a domain is a Starknet.id domain.
+Checks if a domain is a Starknet ID domain.
 
 ▸ utils.**isStarkDomain**(`domain`: `string`) => `boolean`
 
@@ -535,7 +535,7 @@ A `boolean` representing if the domain is a .stark domain.
 
 ##### isStarkRootDomain
 
-Checks if a domain is a Starknet.id root domain.
+Checks if a domain is a Starknet ID root domain.
 
 ▸ utils.**isStarkRootDomain**(`domain`: `string` | `undefined`) => `boolean`
 
@@ -551,7 +551,7 @@ A `boolean` representing if the domain is a .stark root domain.
 
 ##### isSubdomain
 
-Checks if a domain is a Starknet.id subdomain.
+Checks if a domain is a Starknet ID subdomain.
 
 ▸ utils.**isSubdomain**(`domain`: `string` | `undefined`) => `boolean`
 
@@ -601,7 +601,7 @@ A `boolean` representing if the domain is a Xplorer subdomain.
 
 ##### getNamingContract
 
-Retrieve the Starknet.id naming contract address based on the chain ID.
+Retrieve the Starknet ID naming contract address based on the chain ID.
 
 ▸ utils.**getNamingContract**(`chainId`: `StarknetChainId`) => `string`
 
@@ -617,7 +617,7 @@ A `string` representing the naming contract address.
 
 ##### getIdentityContract
 
-Retrieve the Starknet.id identity contract address based on the chain ID.
+Retrieve the Starknet ID identity contract address based on the chain ID.
 
 ▸ utils.**getIdentityContract**(`chainId`: `StarknetChainId`) => `string`
 
@@ -633,7 +633,7 @@ A `string` representing the identity contract address.
 
 ##### getVerifierContract
 
-Retrieve the Starknet.id verifier contract address based on the chain ID.
+Retrieve the Starknet ID verifier contract address based on the chain ID.
 
 ▸ utils.**getVerifierContract**(`chainId`: `StarknetChainId`) => `string`
 
@@ -649,7 +649,7 @@ A `string` representing the verifier contract address.
 
 ##### getPfpVerifierContract
 
-Retrieve the Starknet.id profile picture verifier contract address based on the chain ID.
+Retrieve the Starknet ID profile picture verifier contract address based on the chain ID.
 
 ▸ utils.**getPfpVerifierContract**(`chainId`: `StarknetChainId`) => `string`
 
@@ -665,7 +665,7 @@ A `string` representing the profile picture verifier contract address.
 
 ##### getPopVerifierContract
 
-Retrieve the Starknet.id proof of personhood verifier contract address based on the chain ID.
+Retrieve the Starknet ID proof of personhood verifier contract address based on the chain ID.
 
 ▸ utils.**getPopVerifierContract**(`chainId`: `StarknetChainId`) => `string`
 

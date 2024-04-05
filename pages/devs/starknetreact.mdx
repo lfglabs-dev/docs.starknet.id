@@ -1,12 +1,12 @@
 # Starknet React
 
-Starknet React provides seamless integration with Starknet.id, allowing you to effortlessly retrieve Stark names and addresses.
+Starknet React provides seamless integration with Starknet ID, allowing you to effortlessly retrieve Stark names and addresses.
 
 [🔗 View the source code on GitHub](https://github.com/apibara/starknet-react)
 
 [🔗 Check out interactive demo of the hooks](https://starknet-react.com/demos/starknetid)
 
-Please note that you need to install version 2 of starknet-react to use the starknet.id hooks.
+Please note that you need to install version 2 of starknet-react to use the Starknet ID hooks.
 
 ## Installation
 
@@ -90,7 +90,7 @@ export default ConnectButton;
 
 #### useStarkProfile
 
-The `useStarkProfile` hook fetches all profile data corresponding to a given address. By default, it queries the Starknet.id naming and identity contracts. However, you can specify alternative contracts by providing their addresses.
+The `useStarkProfile` hook fetches all profile data corresponding to a given address. By default, it queries the Starknet ID naming and identity contracts. However, you can specify alternative contracts by providing their addresses.
 
 ▸ **useStarkProfile**(`address`, `useDefaultPfp?`, `namingContract?`, `identityContract?`): `useStarkProfileResult`
 
@@ -182,7 +182,7 @@ function Component() {
 
 #### useStarkName
 
-The `useStarkName` hook enables you to fetch the Stark name associated with a given address. By default, it uses the Starknet.id naming contract, but you can specify an alternative contract if needed. If no Stark name is found for the address, the hook will return "stark."
+The `useStarkName` hook enables you to fetch the Stark name associated with a given address. By default, it uses the Starknet ID naming contract, but you can specify an alternative contract if needed. If no Stark name is found for the address, the hook will return "stark."
 
 ▸ **useStarkName**(`address`, `contract?`): `StarkNameResult`
 
@@ -259,7 +259,7 @@ function Component() {
 
 #### useAddressFromStarkName
 
-The `useAddressFromStarkName` hook fetches the address corresponding to a given stark name. By default, it queries the Starknet.id naming contract. However, you can specify an alternative contract by providing its address. If the Stark name doesn't have an associated address, the hook returns "0x0".
+The `useAddressFromStarkName` hook fetches the address corresponding to a given stark name. By default, it queries the Starknet ID naming contract. However, you can specify an alternative contract by providing its address. If the Stark name doesn't have an associated address, the hook returns "0x0".
 
 ▸ **useAddressFromStarkName**(`name`, `contract?`): `AddressFromStarkNameResult`
 
