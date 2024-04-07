@@ -1,6 +1,7 @@
 import React from "react";
 import { DocsThemeConfig } from "nextra-theme-docs";
 import HeadComponent from "@components/head";
+import HeadComponent from "@components/head";
 
 const config: DocsThemeConfig = {
   logo: <img src="/logo.svg" style={{ height: "60px" }} />,
@@ -12,6 +13,11 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: "https://github.com/starknet-id/docs-starknet-id",
   footer: { component: null },
+  useNextSeoProps() {
+    return {
+      titleTemplate: "%s",
+    };
+  },
   head: <HeadComponent />,
 };
 
