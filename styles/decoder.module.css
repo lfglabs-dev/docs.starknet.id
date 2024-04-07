@@ -47,3 +47,11 @@
   cursor: pointer;
   text-decoration: underline;
 }
+
+html[class~="light"] .encoder {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+html[class~="light"] .encoder::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+}
