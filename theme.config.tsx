@@ -1,7 +1,6 @@
 import React from "react";
 import { DocsThemeConfig } from "nextra-theme-docs";
 import HeadComponent from "@components/head";
-import HeadComponent from "@components/head";
 
 const config: DocsThemeConfig = {
   logo: <img src="/logo.svg" style={{ height: "60px" }} />,
