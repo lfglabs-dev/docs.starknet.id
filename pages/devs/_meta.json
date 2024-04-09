@@ -4,5 +4,6 @@
   "starknetjs": "Starknet.js",
   "starknetidrs": "Starknetid.rs",
   "starknetid-api": "Starknet ID API",
-  "contracts": "Deployed Contracts"
+  "contracts": "Deployed Contracts",
+  "usecases":"Integration Examples"
 }
