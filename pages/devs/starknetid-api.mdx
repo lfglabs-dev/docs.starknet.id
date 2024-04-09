@@ -2,7 +2,7 @@
 
 This part of the documentation explains how to resolve a domain, address, or read identity information via the API. We do not recommend calling our endpoint to avoid centralization. It was designed for the StarknetId product. If you want to use it anyway it is highly recommended to selfhost it.
 
-[🔗 View the source code on GitHub](https://github.com/starknet-id/api.starknet.id)
+[🔗 View the source code on GitHub](https://github.com/starknet-id/api.Starknet ID)
 
 ## Endpoints
 
@@ -13,7 +13,7 @@ Retrieve the associated address and its expiry date for a given domain.
 **Method & URL**
 
 - HTTP Method: `GET`
-- API URL: `https://api.starknet.id/domain_to_addr`
+- API URL: `https://api.Starknet.id/domain_to_addr`
 
 **Query Parameters**
 
@@ -27,7 +27,7 @@ The API will return the associated address along with its expiry date.
 
 **Example request**
 
-`https://api.starknet.id/domain_to_addr?domain=fricoben.stark`
+`https://api.Starknet.id/domain_to_addr?domain=fricoben.stark`
 
 **Success Response Example**
 
@@ -53,7 +53,7 @@ Retrieve the associated domain and its expiry date for a given address.
 **Method & URL**
 
 - HTTP Method: `GET`
-- API URL: `https://api.starknet.id/addr_to_domain`
+- API URL: `https://api.Starknet.id/addr_to_domain`
 
 **Query Parameters**
 
@@ -67,7 +67,7 @@ The API will return the associated domain along with its expiry date.
 
 **Example request**
 
-`https://api.starknet.id/addr_to_domain?addr=0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3`
+`https://api.Starknet.id/addr_to_domain?addr=0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3`
 
 **Success Response Example**
 
@@ -93,7 +93,7 @@ Retrieve the associated domains for multiple addresses in a single request. This
 **Method & URL**
 
 - HTTP Method: `POST`
-- API URL: `https://api.starknet.id/addrs_to_domains`
+- API URL: `https://api.Starknet.id/addrs_to_domains`
 
 **Request Body**
 
@@ -149,7 +149,7 @@ Retrieve the braavos and xplorer subdomain associated to an address.
 **Method & URL**
 
 - HTTP Method: `GET`
-- API URL: `https://api.starknet.id/addr_to_external_domains`
+- API URL: `https://api.Starknet.id/addr_to_external_domains`
 
 **Query Parameters**
 
@@ -163,7 +163,7 @@ The API will return the associated braavos and xplorer subdomains.
 
 **Example request**
 
-`https://api.starknet.id/addr_to_domain?addr=0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3`
+`https://api.Starknet.id/addr_to_domain?addr=0x061b6c0a78f9edf13cea17b50719f3344533fadd470b8cb29c2b4318014f52d3`
 
 **Success Response Example**
 
@@ -190,7 +190,7 @@ Retrieve all the Starknet IDs owned by a given address.
 **Method & URL**
 
 - HTTP Method: `GET`
-- API URL: `https://api.starknet.id/addr_to_full_ids`
+- API URL: `https://api.Starknet.id/addr_to_full_ids`
 
 **Query Parameters**
 
@@ -204,7 +204,7 @@ The API will return all the Starknet IDs owned by the address.
 
 **Example request**
 
-`https://api.starknet.id/addr_to_full_ids?addr=0x072D4F3FA4661228ed0c9872007fc7e12a581E000FAd7b8f3e3e5bF9E6133207`
+`https://api.Starknet.id/addr_to_full_ids?addr=0x072D4F3FA4661228ed0c9872007fc7e12a581E000FAd7b8f3e3e5bF9E6133207`
 
 **Success Response Example**
 
@@ -223,7 +223,7 @@ The API will return all the Starknet IDs owned by the address.
 
 **Empty Response Example**
 
-`https://api.starknet.id/addr_to_full_ids?addr=0x00Ec0ED6E46a4435C6324D47EADeaadFBc9f66D372F4Cf36b767F5F26754bB47`
+`https://api.Starknet.id/addr_to_full_ids?addr=0x00Ec0ED6E46a4435C6324D47EADeaadFBc9f66D372F4Cf36b767F5F26754bB47`
 
 ```
 {
@@ -233,7 +233,7 @@ The API will return all the Starknet IDs owned by the address.
 
 **Error Response Example**
 
-`https://api.starknet.id/addr_to_full_ids?addr=lol.stark`
+`https://api.Starknet.id/addr_to_full_ids?addr=lol.stark`
 
 ```
 Failed to deserialize query string: invalid character
@@ -248,7 +248,7 @@ Retrieve available (not associated with a domain) Starknet IDs owned by a given 
 **Method & URL**
 
 - HTTP Method: `GET`
-- API URL: `https://api.starknet.id/addr_to_available_ids`
+- API URL: `https://api.Starknet.id/addr_to_available_ids`
 
 **Query Parameters**
 
@@ -262,7 +262,7 @@ The API will return all the Starknet IDs that are not linked with a domain yet o
 
 **Example request**
 
-`https://api.starknet.id/addr_to_available_ids?addr=0x072D4F3FA4661228ed0c9872007fc7e12a581E000FAd7b8f3e3e5bF9E6133207`
+`https://api.Starknet.id/addr_to_available_ids?addr=0x072D4F3FA4661228ed0c9872007fc7e12a581E000FAd7b8f3e3e5bF9E6133207`
 
 **Success Response Example**
 
@@ -282,7 +282,7 @@ The API will return all the Starknet IDs that are not linked with a domain yet o
 
 **Error Response Example**
 
-`https://api.starknet.id/addr_to_available_ids?addr=lol.stark`
+`https://api.Starknet ID/addr_to_available_ids?addr=lol.stark`
 
 ```
 Failed to deserialize query string: invalid character
@@ -297,7 +297,7 @@ Retrieve the token ID associated with a given address.
 **Method & URL**
 
 - HTTP Method: `GET`
-- API URL: `https://api.starknet.id/addr_to_token_id`
+- API URL: `https://api.Starknet.id/addr_to_token_id`
 
 **Query Parameters**
 
@@ -311,7 +311,7 @@ The API will retrieve the token id of the Starknet ID associated with the main d
 
 **Example request**
 
-`https://api.starknet.id/addr_to_token_id?addr=0x072D4F3FA4661228ed0c9872007fc7e12a581E000FAd7b8f3e3e5bF9E6133207`
+`https://api.Starknet.id/addr_to_token_id?addr=0x072D4F3FA4661228ed0c9872007fc7e12a581E000FAd7b8f3e3e5bF9E6133207`
 
 **Success Response Example**
 
@@ -323,7 +323,7 @@ The API will retrieve the token id of the Starknet ID associated with the main d
 
 **Error Response Example**
 
-`https://api.starknet.id/addr_to_token_id?addr=0x00Ec0ED6E46a4435C6324D47EADeaadFBc9f66D372F4Cf36b767F5F26754bB47`
+`https://api.Starknet.id/addr_to_token_id?addr=0x00Ec0ED6E46a4435C6324D47EADeaadFBc9f66D372F4Cf36b767F5F26754bB47`
 
 ```
 no main domain found for this address
@@ -338,7 +338,7 @@ Retrieve the data of a Starknet ID.
 **Method & URL**
 
 - HTTP Method: `GET`
-- API URL: `https://api.starknet.id/id_to_data`
+- API URL: `https://api.Starknet.id/id_to_data`
 
 **Query Parameters**
 
@@ -352,7 +352,7 @@ The API will retrieve the data written on the Starknet ID. If a domain is held b
 
 **Example request**
 
-`https://api.starknet.id/id_to_data?id=1`
+`https://api.Starknet.id/id_to_data?id=1`
 
 **Success Response Example**
 
@@ -430,7 +430,7 @@ The API will retrieve the data written on the Starknet ID. If a domain is held b
 
 **Error Response Example**
 
-`https://api.starknet.id/id_to_data?id=10123891239013292`
+`https://api.Starknet.id/id_to_data?id=10123891239013292`
 
 ```
 Identity not found
@@ -445,7 +445,7 @@ Retrieve the data of a domain.
 **Method & URL**
 
 - HTTP Method: `GET`
-- API URL: `https://api.starknet.id/domain_to_data`
+- API URL: `https://api.Starknet.id/domain_to_data`
 
 **Query Parameters**
 
@@ -459,7 +459,7 @@ Like the previous endpoint, API will retrieve everything related to an identity 
 
 **Example request**
 
-`https://api.starknet.id/domain_to_data?domain=fricoben.stark`
+`https://api.Starknet.id/domain_to_data?domain=fricoben.stark`
 
 **Success Response Example**
 
@@ -537,7 +537,7 @@ Like the previous endpoint, API will retrieve everything related to an identity 
 
 **Error Response Example**
 
-`https://api.starknet.id/domain_to_data?domain=qqqqqqqqqs.stark`
+`https://api.Starknet.id/domain_to_data?domain=qqqqqqqqqs.stark`
 
 ```
 Identity not found
@@ -558,7 +558,7 @@ Retrieve the NFT uri of a Starknet ID.
 **Method & URL**
 
 - HTTP Method: `GET`
-- API URL: `https://api.starknet.id/uri`
+- API URL: `https://api.Starknet.id/uri`
 
 **Query Parameters**
 
@@ -572,7 +572,7 @@ The API will retrieve the uri of the Starknet ID NFT.
 
 **Example request**
 
-`https://api.starknet.id/uri?id=12`
+`https://api.Starknet.id/uri?id=12`
 
 **Success Response Example**
 
@@ -580,7 +580,7 @@ The API will retrieve the uri of the Starknet ID NFT.
 {
   "name": "66868.stark",
   "description": "This token represents an identity on Starknet.",
-  "image": "https://starknet.id/api/identicons/12",
+  "image": "https://Starknet.id/api/identicons/12",
   "expiry": 1702361677,
   "attributes": [
     { "trait_type": "Subdomain", "value": ["yes"] },
@@ -592,13 +592,13 @@ The API will retrieve the uri of the Starknet ID NFT.
 
 **Inexistant Starknet ID Response Example**
 
-`https://api.starknet.id/uri?id=1627381236172`
+`https://api.Starknet.id/uri?id=1627381236172`
 
 ```json
 {
   "name": "Starknet ID: 1627381236172",
   "description": "This token represents an identity on Starknet.",
-  "image": "https://starknet.id/api/identicons/1627381236172",
+  "image": "https://Starknet.id/api/identicons/1627381236172",
   "expiry": null,
   "attributes": null
 }

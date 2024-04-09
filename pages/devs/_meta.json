@@ -1,7 +1,9 @@
 {
-  "starknetidjs": "Starknetid.js",
+  "starknetidjs": "Starknet ID SDK",
   "starknetreact": "Starknet React",
   "starknetjs": "Starknet.js",
   "starknetidrs": "Starknetid.rs",
-  "starknetid-api": "Starknet.id API"
+  "starknetid-api": "Starknet ID API",
+  "contracts": "Deployed Contracts",
+  "usecases":"Integration Examples"
 }

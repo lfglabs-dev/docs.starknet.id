@@ -1,7 +1,7 @@
 {
-  "index": "Introduction",
-  "users": "For users",
-  "devs": "For devs",
+  "index": "Overview",
+  "core": "Core Concepts",
+  "devs": "Developer Integration",
   "architecture": "Architecture",
   "contact": {
     "title": "Contact ↗",

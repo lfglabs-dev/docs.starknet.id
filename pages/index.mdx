@@ -1,26 +1,32 @@
-# Starknet.ID Documentation
+# Starknet ID Documentation
 
-Welcome to the Starknet.ID documentation. Whether you're a user wanting to get started, a developer aiming to integrate with the Starknet.ID ecosystem, or someone curious about the architecture, you've come to the right place!
-
-## What is Starknet.ID?
-
-Starknet.ID serves as a versatile passport for Starknet, facilitating seamless storage and sharing of user-specific data within the Starknet ecosystem. This robust identity protocol allows various Starknet app to access and utilize user information effortlessly, enhancing the overall user experience.
-
-![Starknet.ID Illustration](/illustrations/passportExplaination.webp)
-
-When a user registers a stark name with Starknet.ID, this information is accessible across different all the Starknet Ecosystem. This means that every app will share the Starknet ID info and could use/display it instead of asking users to create their profile again.
-
-## How to Navigate the Docs?
-
-- **For Users**: Understand how to use the website, create an ID, and mint a domain. Ideal if you're looking to explore the Starknet.ID platform and its features.
-
-- **For Developers**: Dive deep into integrating Starknet.ID into your dApp and making it compatible with Stark domains. Perfect for developers eager to leverage the Starknet.ID ecosystem.
-
-- **Architecture**: Curious about the intricacies? Explore how the Starknet.ID ecosystem is structured and the underlying technology.
+Welcome to the Starknet ID documentation. Whether you're a user wanting to get started, a developer aiming to integrate with the Starknet ID ecosystem, or someone curious about the architecture, you've come to the right place!
 
 ---
 
-### Get Started Now
+## Get Started
 
-- [Connect to the Dapp](https://app.starknet.id/) if you're a user wanting to dive in.
-- If you're a developer and want to integrate StarknetID, [check out the developer section](./developers-integration.md) for more details.
+import CodeIcon from "@components/icons/code.svg";
+import GlobeIcon from "@components/icons/globe.svg";
+import IdCardIcon from "@components/icons/id-card.svg";
+import LinkIcon from "@components/icons/link.svg";
+import LightningIcon from "@components/icons/lightning.svg"; // Using the lightning icon for FAQs
+import { Card, Cards } from "nextra/components";
+
+<Cards>
+  <Card 
+  icon={<IdCardIcon />} 
+  title="Core Concepts" 
+  href="/core/protocol" 
+  />
+  <Card 
+  icon={<CodeIcon />} 
+  title="Developer Guide" 
+  href="/devs/starknetidjs" 
+  />
+  <Card
+    icon={<LinkIcon />}
+    title="Architecture"
+    href="/architecture/identity"
+  />
+</Cards>
