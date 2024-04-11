@@ -1,7 +1,7 @@
 {
   "identity": "Identity NFT",
   "naming": "Stark Naming System",
-  "auto_renewal": "Subscription",
+  "subscription": "Subscription",
   "ccip": "Offchain Resolving",
   "audits": "Audits"
 }
