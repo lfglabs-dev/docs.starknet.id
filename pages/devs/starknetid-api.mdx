@@ -2,7 +2,7 @@
 
 This part of the documentation explains how to resolve a domain, address, or read identity information via the API. We do not recommend calling our endpoint to avoid centralization. It was designed for the StarknetId product. If you want to use it anyway it is highly recommended to selfhost it.
 
-[🔗 View the source code on GitHub](https://github.com/starknet-id/api.Starknet ID)
+[🔗 View the source code on GitHub](https://github.com/starknet-id/api.starknet.id)
 
 ## Endpoints
 
@@ -13,7 +13,7 @@ Retrieve the associated address and its expiry date for a given domain.
 **Method & URL**
 
 - HTTP Method: `GET`
-- API URL: `https://api.Starknet.id/domain_to_addr`
+- API URL: `https://api.starknet.id/domain_to_addr`
 
 **Query Parameters**
 
@@ -282,7 +282,7 @@ The API will return all the Starknet IDs that are not linked with a domain yet o
 
 **Error Response Example**
 
-`https://api.Starknet ID/addr_to_available_ids?addr=lol.stark`
+`https://api.starknet.id/addr_to_available_ids?addr=lol.stark`
 
 ```
 Failed to deserialize query string: invalid character
@@ -348,7 +348,7 @@ Retrieve the data of a Starknet ID.
 
 **Response**
 
-The API will retrieve the data written on the Starknet ID. If a domain is held by this id, `domain` will contain all its naming data. `verifier_data` and `extended_verifier_data` will contain identity data written through other smartcontracts. This data space is permissionless so it usually requires some interpretation to make sense, it could be twitter id, discord id, profile pics or anything else. 
+The API will retrieve the data written on the Starknet ID. If a domain is held by this id, `domain` will contain all its naming data. `verifier_data` and `extended_verifier_data` will contain identity data written through other smartcontracts. This data space is permissionless so it usually requires some interpretation to make sense, it could be twitter id, discord id, profile pics or anything else.
 
 **Example request**
 
