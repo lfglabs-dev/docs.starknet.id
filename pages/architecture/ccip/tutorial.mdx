@@ -9,7 +9,7 @@ First, we need to prepare our data source and domain:
 1. **Create a Public Page on Notion**: Begin by setting up a public page in Notion. For example, here's a [sample page](https://www.notion.so/c415880e74ff4769ab17510bd434d80d?pvs=21) I've prepared. This page includes a table with two columns: `domain` and `address`. This structure allows us to map domain names to specific addresses.
 2. **Capture Your Database ID**: After setting up your table, note the `database_id`; it's crucial for our API to interact with this Notion page later on.
 3. **Integrate with Notion**: Create an integration on Notion to enable our resolver to query the Notion database programmatically. You can find the steps to do this in the [Notion Developers Guide](https://developers.notion.com/docs/create-a-notion-integration).
-4. **Domain Registration**: Purchase the `notion.stark` domain through [Starknet ID](http://app.Starknet ID/). This domain will serve as the root for any subdomains we wish to resolve using our system.
+4. **Domain Registration**: Purchase the `notion.stark` domain through [Starknet ID](http://app.starknet.id/). This domain will serve as the root for any subdomains we wish to resolve using our system.
 
 The objective here is to directly add domains and addresses into our Notion page and use them onchain. For instance, enabling transactions to `test.notion.stark` without requiring onchain confirmation of domain ownership simplifies managing and updating domain records.
 
@@ -144,7 +144,7 @@ lazy_static = "1.4"
 
 ### Define Your Application State and Models
 
-**AppState Configuration**: Create structures to hold your application's configuration, including the Notion API key and database ID. See the [`config.toml` template file](https://github.com/starknet-id/api.ccip-demo.Starknet ID/blob/master/config.template.toml) for reference.
+**AppState Configuration**: Create structures to hold your application's configuration, including the Notion API key and database ID. See the [`config.toml` template file](https://github.com/starknet-id/api.ccip-demo.starknet.id/blob/master/config.template.toml) for reference.
 
 ```rust
 // Inside src/models.rs
