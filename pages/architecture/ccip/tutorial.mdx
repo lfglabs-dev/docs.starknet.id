@@ -1,6 +1,6 @@
 # Tutorial: Implementing CCIP Read with the Notion API
 
-If you own a domain, Starknet ID allows you to create as many subdomains as you want. You can even create a smartcontract which manages your subdomains (it is called a resolver contract). This tutorial shows you how to connect such a smartcontract to off chain data. In this example we do it with Notion so you can create free subdomains like iris.notion.stark in a notion table without having to send any transaction. To know more about how it works, check out [offchain resolving](https://docs.Starknet ID/architecture/ccip)
+If you own a domain, Starknet ID allows you to create as many subdomains as you want. You can even create a smartcontract which manages your subdomains (it is called a resolver contract). This tutorial shows you how to connect such a smartcontract to off chain data. In this example we do it with Notion so you can create free subdomains like iris.notion.stark in a notion table without having to send any transaction. To know more about how it works, check out [offchain resolving](https://docs.starknet.id/architecture/ccip)
 
 ## Initial Setup
 
@@ -40,7 +40,13 @@ trait IResolver<TContractState> {
 
 The resolve function will handle two scenarios when attempting to resolve a domain:
 
-- **No Hints Provided**: When the `resolve`\*function is called without any hints, the contract will trigger a panic, returning an error that signals the need for offchain resolving. This error is an array of short strings. The first element should always be `offchain_resolving` followed by the URL of your api which is predetermined and passed in the constructor of your contract.
+- **No Hints Provided**: When the `resolve` function is called without any hints, the contract will trigger a panic, returning an error that signals the need for offchain resolving. This error is an array of short strings. The first element should always be the string `offchain_resolving` followed by the domain you received in the resolve function as a Span, and finally the URLs of your apis.
+
+For example, an error message for `iris.notion.stark` and two URLs would look like this:
+
+```rust
+["offchain_resolving", 1, 999902, 2, "https://api.ccip-demo.starknet.", "id/resolve?domain=", 2, "https://api2.ccip-demo.starknet", ".id/resolve?domain="]
+```
 
 - **Hints Provided**: In scenarios where hints are provided, the contract will expect four hints: the address the domain resolves to, a signature (`r` and `s`), and a max validity timestamp. The contract will then perform the following checks:
   - **Timestamp Verification**: Ensures the current block timestamp is less than the provided max validity timestamp, ensuring the data is not outdated
@@ -56,7 +62,7 @@ fn resolve(
         self: @TContractState, domain: Span<felt252>, field: felt252, hint: Span<felt252>
     ) -> felt252 {
         if hint.len() != 4 {
-            panic(self.get_uri(array!['offchain_resolving']));
+            panic(self.get_error_array(array!['offchain_resolving']));
         }
 
         // Ensure the timestamp is valid and not expired
@@ -86,6 +92,30 @@ fn resolve(
         return *hint.at(0);
     }
 ```
+
+### URL Management
+
+Within our contract we will add methods to management our api URIs. You can define different functions to add, remove and retrieve URIs.
+
+```rust
+fn get_uris(self: @TContractState) -> Array<felt252>;
+fn add_uri(ref self: TContractState, new_uri: Span<felt252>);
+fn remove_uri(ref self: TContractState, index: felt252);
+```
+
+It is crucial to emit an event of type `StarknetIDOffChainResolverUpdate` whenever a URI is added or removed. Starknet ID uses this event to discover your resolver and track any changes associated with it. This allows Starknet ID to resolver offchain resolver in its api through the endpoint [`domain_to_addr`](https://docs.starknet.id/devs/starknetid-api#domain-to-address).
+
+Here is the structure of the event:
+
+```rust
+#[derive(Drop, starknet::Event)]
+struct StarknetIDOffChainResolverUpdate {
+    uri_added: Span<felt252>,
+    uri_removed: Span<felt252>,
+}
+```
+
+Please note that the Starknet ID fetches new `StarknetIDOffChainResolverUpdate` events at an interval of every 10 minutes.
 
 🔗 For a comprehensive overview of the contract's code, visit the repository: [starknet-id/resolver_ccip](https://github.com/starknet-id/resolver_ccip)
 
@@ -225,7 +255,7 @@ match ecdsa_sign(&state.conf.starknet.private_key, &hash) {
 }
 ```
 
-🔗 For the complete code and further details, visit the repository: [starknet-id/api.ccip-demo.Starknet ID](https://github.com/starknet-id/api.ccip-demo.Starknet ID)
+🔗 For the complete code and further details, visit the repository: [starknet-id/api.ccip-demo.starknet.id](https://github.com/starknet-id/api.ccip-demo.starknet.id)
 
 ## Deploy & Set Up Your Domain & Resolver
 
@@ -250,13 +280,13 @@ Deploy your API using the generated private key along with your Notion credentia
 
 ### Resolver Contract Deployment
 
-Deploy your resolver contract with the public key and the URL of your API endpoint. Ensure your API's endpoint is structured to append the domain name directly to the query, such as `https://sepolia.api.ccip-demo.Starknet ID/resolve?domain=`. This setup enables the `getAddressFromStarkName` function from `starknetid.js`, used later in the frontend, to function seamlessly.
+Deploy your resolver contract with the public key of your API endpoint and add your API url to your contract. Ensure your API's endpoint is structured to append the domain name directly to the query, such as `https://sepolia.api.ccip-demo.starknet.id/resolve?domain=`. This setup enables the `getAddressFromStarkName` function from `starknetid.js`, used later in the frontend, to function seamlessly.
 
 ### Domain Resolver Configuration
 
 With your resolver contract deployed, you can now set it as the resolver for your domain name. This configuration can be done directly through [Voyager](https://sepolia.voyager.online/contract/0x0707f09bc576bd7cfee59694846291047e965f4184fe13dac62c56759b3b6fa7#writeContract) by specifying the `set_domain_to_resolver` function with the appropriate raw calldata:
 
-- **Domain as an Array**: Include your domain's length and its encoded value. StarkNet ID utilizes a specific encoding algorithm. To encode your domain, you can use [Starknet ID encoding playground](https://docs.Starknet ID/architecture/naming/playground). For example, if encoding `notion.stark` results in `1059716045`, you would send `1` as the array length and `1059716045` as the content.
+- **Domain as an Array**: Include your domain's length and its encoded value. StarkNet ID utilizes a specific encoding algorithm. To encode your domain, you can use [Starknet ID encoding playground](https://docs.starknet.id/architecture/naming/playground). For example, if encoding `notion.stark` results in `1059716045`, you would send `1` as the array length and `1059716045` as the content.
 - **Resolver Contract Address**: Add the address of the deployed resolver contract.
 
 Example calldata input:
@@ -268,19 +298,19 @@ Example calldata input:
 From a contract perspective we’re all set. If you try to call `domain_to_address` of the naming contract on a subdomain `test.notion.stark` it will fail with an error starting by `offchain_resolving`
 
 ```bash
-LibraryError: RPC: starknet_call with params {"request":{"contract_address":"0x0707f09bc576bd7cfee59694846291047e965f4184fe13dac62c56759b3b6fa7","entry_point_selector":"0x2e269d930f6d7ab92b15ce8ff9f5e63709391617e3465fff79ba6baf278ce60","calldata":["0x2","0xf41de","0x3f29fbcd","0x0"]},"block_id":"pending"}
- 40: Contract error: {"revert_error":"Error in the called contract (0x0707f09bc576bd7cfee59694846291047e965f4184fe13dac62c56759b3b6fa7):\nError at pc=0:16405:\nGot an exception while executing a hint: Execution failed. Failure reason: (0x6f6666636861696e5f7265736f6c76696e67 ('offchain_resolving'), 0x68747470733a2f2f7365706f6c69612e6170692e636369702d64656d6f2e73 ('https://sepolia.api.ccip-demo.s'), 0x7461726b6e65742e69642f7265736f6c76653f646f6d61696e3d ('tarknet.id/resolve?domain=')).\nCairo traceback (most recent call last):\nUnknown location (pc=0:304)\nUnknown location (pc=0:5803)\nUnknown location (pc=0:11494)\n\nError in the called contract (0x0153be68cf8fc71138610811dd2b4fa481eb99f3eedcb3fce7369569055be275):\nExecution failed. Failure reason: (0x6f6666636861696e5f7265736f6c76696e67 ('offchain_resolving'), 0x68747470733a2f2f7365706f6c69612e6170692e636369702d64656d6f2e73 ('https://sepolia.api.ccip-demo.s'), 0x7461726b6e65742e69642f7265736f6c76653f646f6d61696e3d ('tarknet.id/resolve?domain=')).\n"}
-    at RpcProvider.errorHandler (index.mjs:2753:13)
-    at RpcProvider.fetchEndpoint (index.mjs:2769:12)
-    at async RpcProvider.callContract (index.mjs:3144:20)
-    at async tryResolveDomainSID (resolvingForm.tsx:85:25)
-    at async getAddressFromStarkName (resolvingForm.tsx:45:14)
-    at async submit (resolvingForm.tsx:33:22)
+error LibraryError: RPC: starknet_call with params {"request":{"contract_address":"0x0707f09bc576bd7cfee59694846291047e965f4184fe13dac62c56759b3b6fa7",
+"entry_point_selector":"0x2e269d930f6d7ab92b15ce8ff9f5e63709391617e3465fff79ba6baf278ce60","calldata":["0x2","0xf41de","0x3f29fbcd","0x0"]},"block_id":"pending"}
+ 40: Contract error: {"revert_error":"Error in the called contract (0x0707f09bc576bd7cfee59694846291047e965f4184fe13dac62c56759b3b6fa7):\nError at pc=0:16478:
+ \nGot an exception while executing a hint: Execution failed. Failure reason: (0x6f6666636861696e5f7265736f6c76696e67 ('offchain_resolving'),
+ 0x1, 0xf41de, 0x2, 0x687474703a2f2f302e302e302e303a383039302f7265736f6c76653f646f6d ('http://0.0.0.0:8090/resolve?dom'), 0x61696e3d ('ain='),
+ 0x2, 0x68747470733a2f2f6170692e636369702d64656d6f2e737461726b6e65742e ('https://api.ccip-demo.starknet.'), 0x69642f7265736f6c76653f646f6d61696e3d ('id/resolve?domain=')).\n"}
 ```
 
 ## Setting Up the Frontend
 
 Integrating offchain resolving into your frontend application is streamlined and efficient, thanks to the `getAddressFromStarkName` function provided in `starknetid.js`. This function seamlessly manages the offchain resolving process, ensuring a smooth user experience.
+
+Reverse resolving is also supported with the `getStarkName` function. Note that for it to work you first need to call `set_address_to_domain` of the [naming contract](https://github.com/starknet-id/naming/blob/master/src/interface/naming.cairo#L88).
 
 🔗 You can refer to the [starknetid.js documentation](https://docs.Starknet.id/devs/starknetidjs#getaddressfromstarkname)
 
