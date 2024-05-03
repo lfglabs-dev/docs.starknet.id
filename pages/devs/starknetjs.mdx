@@ -54,7 +54,7 @@ const provider = new Provider({
   sequencer: { network: constants.NetworkName.SN_MAIN },
 });
 
-const address = await provider.getAddressFromStarkName(address ?? "");
+const name = await provider.getStarkName(address ?? "");
 ```
 
 ---
