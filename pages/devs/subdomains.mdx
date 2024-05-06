@@ -1,0 +1,72 @@
+# Subdomain Architecture: Pros and Cons
+
+With Starknet ID, you can offer subdomains for your users. Subdomains not only enhance user experience by providing personalized addresses but also integrate seamlessly with web3 identities. Below, we explore three distinct architectures for managing subdomains, detailing their advantages and disadvantages.
+
+When developing a subdomain strategy, you typically face a trilemma among ease of implementation, feature richness, and controllability. Often, you can only prioritize two of these aspects.
+
+As you control the parent domain, you always have the option to revert or switch strategies. Moreover, you can limit who receives these subdomains through the design of the distribution contract, such as requiring server signatures to claim a subdomain.
+
+## Native subdomains (easy + feature-rich)
+
+A smart contract which mints subdomains on actual identity NFTs from StarknetID contract (this identity can be minted in a multicall).
+
+### Pros
+
+- Users can change their profile picture, add their social networks verifications (twitter, discord, GitHub)
+
+### Cons
+
+- You can take back a domain but this requires a transaction and you can’t take back the identity holding it
+- If you decide to switch to a resolver system, users will loose features : profile picture, social networks verifications, etc.
+- Fewer reasons to upgrade to a root domain, so less revenues from affiliation for the protocol
+
+### Example
+
+[🔗 Subdomain distribution contract implementation example](https://github.com/starknet-id/subdomain_distribution)
+
+[🔗 everai.stark](https://www.everai.xyz/everai-id)
+
+![img](/integrations/everai.webp)
+
+## Custom resolvers (easy + controlable)
+
+A smart contract which resolves subdomains to an address via a custom logic.
+
+### Pros
+
+- You can take back a domain at any time
+- You can give or update subdomain for free via [CCIP](https://docs.starknet.id/architecture/ccip)
+- Gives users more reasons to buy a root domain, which means more revenues from affiliation
+
+### Cons
+
+- If you switch to a native subdomains system later, people will have to do another transaction to mint their identity
+
+### Examples
+
+**braavos.stark**
+
+![img](/illustrations/braavos-integration.webp)
+
+**xplorer.stark**
+
+![img](/integrations/xplorer.webp)
+
+[🔗 Resolver contract implementation example](https://github.com/starknet-id/resolver_delegation_cairo1/tree/main)
+
+## Hybrid custom resolver (feature-rich + controlable)
+
+A smart contract which resolves subdomains to an identity via a custom logic. This identity would have to be set as main identity by the user. This can be done in a multicall.
+
+### Pros
+
+- You can take back a domain at any time but not the identity
+- Users can change their profile picture, social networks, etc
+
+### Cons
+
+- Will require more work
+- Fewer reasons to upgrade to a root domain, which means less revenues from affiliation
+- If you decide to switch to a resolver system, users will loose some features
+
+**We advise option 2: Custom resolvers. It can be done fast, gives your more control, competitions less root domains and could be extended to option 3 easily.**
