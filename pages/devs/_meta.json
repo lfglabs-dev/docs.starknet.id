@@ -3,6 +3,7 @@
   "starknetreact": "Starknet React",
   "starknetjs": "Starknet.js",
   "starknetidrs": "Starknetid.rs",
+  "starknetidgo": "Starknetid.go",
   "starknetid-api": "Starknet ID API",
   "contracts": "Deployed Contracts",
   "usecases": "Integration Examples",
