@@ -20,7 +20,7 @@ go get github.com/metacube-games/starknetid.go
 
 1. Create a new RPC provider client
 
-```Go
+```go
 
 client, err := rpc.NewProvider(RPC_URL) // github.com/NethermindEth/starknet.go/rpc
 if err != nil {
@@ -31,7 +31,7 @@ if err != nil {
 
 2. Create a new Starknet.id provider
 
-```Go
+```go
 
 provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
 if err != nil {
@@ -44,7 +44,7 @@ if err != nil {
 
 Example: get address from Stark name
 
-```Go
+```go
 
 address, err := provider.GetAddressFromStarkName(context.Background(), `metacube.stark`)
 if err != nil {
