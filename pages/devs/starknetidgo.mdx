@@ -1,52 +1,1309 @@
 # Starknetid.go
 
-Starknetid.go is an unofficial Go library to interact with the Starknet ID protocol developed and maintained by [Metacube games](https://github.com/metacube-games). The implementation is inspired by the official Javascript library [Starknetid.js](https://github.com/starknet-id/starknetid.js).
+Starknetid.go is a Go library to interact with the Starknet ID protocol developed and maintained by [Metacube games](https://github.com/metacube-games). The implementation is inspired by the official Javascript library [Starknetid.js](https://github.com/starknet-id/starknetid.js).
 
-[🔗 View the source code on GitHub](https://github.com/NethermindEth/starknet.go).
+[🔗 View the source code on GitHub](https://github.com/metacube-games/starknetid.go).
 
-## Getting Started
+## Installation
 
-**Step 1**: Install the module
+You can install the module using the `go get` command:
 
 ```bash
-
 go get github.com/metacube-games/starknetid.go
-
 ```
 
-**Step 2**: Initialize the StarknetId provider
+## Usage
 
-1. Create a new RPC provider client
+**Step 1**: Create a new RPC provider client using the [starknet.go](github.com/NethermindEth/starknet.go) library:
 
 ```go
-
 client, err := rpc.NewProvider(RPC_URL) // github.com/NethermindEth/starknet.go/rpc
 if err != nil {
   panic(err)
 }
 ```
 
-2. Create a new Starknet.id provider
+**Step 2**: Create a new Starknet.id provider
 
 ```go
-
 provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
 if err != nil {
   panic(err)
 }
 ```
 
-**Step 3**: Use the provider to interact with the Starknet.id protocol
+You can find more information about the parameters in the [GoDoc](https://pkg.go.dev/github.com/metacube-games/starknetid.go/provider#NewProvider).
 
-Example: get address from Stark name
+**Step 3**: Use the available functions to interact with the Starknet ID protocol.
+
+You can find examples for each function [here](https://github.com/metacube-games/starknetid.go/blob/main/examples/main.go).
+
+### Functions
+
+#### GetAddressFromStarkName
+
+Returns the address for a given .stark domain.
+
+▸ **GetAddressFromStarkName**(`ctx`, `domain`) (`string`, `error`)
+
+**Parameters**
+
+| Name                  | Type                                                                                | Description                                   |
+| :-------------------- | :---------------------------------------------------------------------------------- | --------------------------------------------- |
+| `ctx`                 | [context.Context](https://pkg.go.dev/context#Context)                               | The context                                   |
+| `domain`              | `string`                                                                            | The .stark domain (.stark suffix is optional) |
+
+**Returns**
+
+(`string`, `error`)
+
+**Defined in**
+
+[provider/provider.go](https://github.com/metacube-games/starknetid.go/blob/main/provider/provider.go)
+
+**Example usage**
 
 ```go
+package main
 
-address, err := provider.GetAddressFromStarkName(context.Background(), `metacube.stark`)
-if err != nil {
-  panic(err)
+import (
+  "context"
+  "fmt"
+
+  "github.com/NethermindEth/starknet.go/rpc"
+  "github.com/metacube-games/starknetid.go/constants"
+  "github.com/metacube-games/starknetid.go/provider"
+)
+
+func main() {
+  // Step 1: Create a new RPC provider client
+  client, err := rpc.NewProvider(RPC_URL)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 2: Create a new Starknet.id provider
+  provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 3: Get the address for a given .stark domain
+  address, err := provider.GetAddressFromStarkName(context.Background(), "example.stark")
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Address: %s\n", address)
 }
-println("Address of metacube.stark:", address)
 ```
 
-Please refer to the [examples](https://github.com/metacube-games/starknetid.go/blob/main/examples/main.go) for more usage examples.
+---
+
+#### GetStarkName
+
+Returns the .stark domain for a given address.
+
+▸ **GetStarkName**(`ctx`, `address`) (`string`, `error`)
+
+**Parameters**
+
+| Name     | Type                                                      | Description                                           |
+| :------- | :-------------------------------------------------------- | ----------------------------------------------------- |
+| `ctx`    | [context.Context](https://pkg.go.dev/context#Context)     | The context                                           |
+| `address`| `string`                                                  | The address                                           |
+
+**Returns**
+
+(`string`, `error`)
+
+**Defined in**
+
+[provider/provider.go](https://github.com/metacube-games/starknetid.go/blob/main/provider/provider.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "context"
+  "fmt"
+
+  "github.com/NethermindEth/starknet.go/rpc"
+  "github.com/metacube-games/starknetid.go/constants"
+  "github.com/metacube-games/starknetid.go/provider"
+)
+
+func main() {
+  // Step 1: Create a new RPC provider client
+  client, err := rpc.NewProvider(RPC_URL)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 2: Create a new Starknet.id provider
+  provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 3: Get the .stark domain for a given address
+  domain, err := provider.GetStarkName(context.Background(), "0x1234567890abcdef")
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf(".stark domain: %s\n", domain)
+}
+```
+
+---
+
+#### GetStarknetId
+
+Returns the Starknet ID for a given .stark domain.
+
+▸ **GetStarknetId**(`ctx`, `domain`) (`string`, `error`)
+
+**Parameters**
+
+| Name     | Type                                                      | Description                                           |
+| :------- | :-------------------------------------------------------- | ----------------------------------------------------- |
+| `ctx`    | [context.Context](https://pkg.go.dev/context#Context)     | The context                                           |
+| `domain` | `string`                                                  | The .stark domain (.stark suffix is optional)         |
+
+**Returns**
+
+(`string`, `error`)
+
+**Defined in**
+
+[provider/provider.go](https://github.com/metacube-games/starknetid.go/blob/main/provider/provider.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "context"
+  "fmt"
+
+  "github.com/NethermindEth/starknet.go/rpc"
+  "github.com/metacube-games/starknetid.go/constants"
+  "github.com/metacube-games/starknetid.go/provider"
+)
+
+func main() {
+  // Step 1: Create a new RPC provider client
+  client, err := rpc.NewProvider(RPC_URL)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 2: Create a new Starknet.id provider
+  provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 3: Get the Starknet ID for a given .stark domain
+  starknetId, err := provider.GetStarknetId(context.Background(), "example.stark")
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Starknet ID: %s\n", starknetId)
+}
+```
+
+---
+
+#### GetUserData
+
+Returns the user data for a given Starknet ID, domain or address.
+
+▸ **GetUserData**(`ctx`, `idDomainOrAddr`, `field`) (`*felt.Felt`, `error`)
+
+**Parameters**
+
+| Name                  | Type                                                                                | Description                                                            |
+| :-------------------- | :---------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| `ctx`                 | [context.Context](https://pkg.go.dev/context#Context)                               | The context                                                            |
+| `idDomainOrAddr`      | `string`                                                                            | the Starknet ID, .stark domain (.stark suffix is optional) or address. |
+| `field`               | `string`                                                                            | The field name                                                         |
+
+**Returns**
+
+([`*felt.Felt`](https://pkg.go.dev/github.com/NethermindEth/juno/core/felt#Felt), `error`)
+
+**Defined in**
+
+[provider/provider.go](https://github.com/metacube-games/starknetid.go/blob/main/provider/provider.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "context"
+  "fmt"
+
+  "github.com/NethermindEth/starknet.go/rpc"
+  "github.com/metacube-games/starknetid.go/constants"
+  "github.com/metacube-games/starknetid.go/provider"
+)
+
+func main() {
+  // Step 1: Create a new RPC provider client
+  client, err := rpc.NewProvider(RPC_URL)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 2: Create a new Starknet.id provider
+  provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 3: Get the user data for a given Starknet ID, domain or address
+  userData, err := provider.GetUserData(context.Background(), "example.stark", "name")
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("User data: %s\n", userData.String())
+}
+```
+
+---
+
+#### GetExtendedUserData
+
+Returns the extended user data for a given Starknet ID, domain, or address.
+
+▸ **GetExtendedUserData**(`ctx`, `idDomainOrAddr`, `field`, `length`) (`[]*felt.Felt`, `error`)
+
+**Parameters**
+
+| Name             | Type                                                      | Description                                                                    |
+| :--------------- | :-------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `ctx`            | [context.Context](https://pkg.go.dev/context#Context)     | The context                                                                    |
+| `idDomainOrAddr` | `string`                                                  | The Starknet ID, .stark domain (.stark suffix is optional), or address         |
+| `field`          | `string`                                                  | The field name                                                                 |
+| `length`         | `int`                                                     | The length of the data                                                         |
+
+**Returns**
+
+([`[]*felt.Felt`](https://pkg.go.dev/github.com/NethermindEth/juno/core/felt#Felt), `error`)
+
+**Defined in**
+
+[provider/provider.go](https://github.com/metacube-games/starknetid.go/blob/main/provider/provider.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "context"
+  "fmt"
+
+  "github.com/NethermindEth/starknet.go/rpc"
+  "github.com/metacube-games/starknetid.go/constants"
+  "github.com/metacube-games/starknetid.go/provider"
+)
+
+func main() {
+  // Step 1: Create a new RPC provider client
+  client, err := rpc.NewProvider(RPC_URL)
+  if (err != nil) {
+    panic(err)
+  }
+
+  // Step 2: Create a new Starknet.id provider
+  provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
+  if (err != nil) {
+    panic(err)
+  }
+
+  // Step 3: Get the extended user data for a given Starknet ID, domain or address
+  extendedUserData, err := provider.GetExtendedUserData(context.Background(), "example.stark", "name", 10)
+  if (err != nil) {
+    panic(err)
+  }
+
+  fmt.Printf("Extended user data: %v\n", extendedUserData)
+}
+```
+
+---
+
+#### GetUnboundedUserData
+
+Returns the unbounded user data for a given Starknet ID, domain, or address.
+
+▸ **GetUnboundedUserData**(`ctx`, `idDomainOrAddr`, `field`) (`[]*felt.Felt`, `error`)
+
+**Parameters**
+
+| Name             | Type                                                      | Description                                                                    |
+| :--------------- | :-------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| `ctx`            | [context.Context](https://pkg.go.dev/context#Context)     | The context                                                                    |
+| `idDomainOrAddr` | `string`                                                  | The Starknet ID, .stark domain (.stark suffix is optional), or address         |
+| `field`          | `string`                                                  | The field name                                                                 |
+
+**Returns**
+
+([`[]*felt.Felt`](https://pkg.go.dev/github.com/NethermindEth/juno/core/felt#Felt), `error`)
+
+**Defined in**
+
+[provider/provider.go](https://github.com/metacube-games/starknetid.go/blob/main/provider/provider.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "context"
+  "fmt"
+
+  "github.com/NethermindEth/starknet.go/rpc"
+  "github.com/metacube-games/starknetid.go/constants"
+  "github.com/metacube-games/starknetid.go/provider"
+)
+
+func main() {
+  // Step 1: Create a new RPC provider client
+  client, err := rpc.NewProvider(RPC_URL)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 2: Create a new Starknet.id provider
+  provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 3: Get the unbounded user data for a given Starknet ID, domain or address
+  unboundedUserData, err := provider.GetUnboundedUserData(context.Background(), "example.stark", "name")
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Unbounded user data: %v\n", unboundedUserData)
+}
+```
+
+---
+
+#### GetVerifierData
+
+Returns the verifier data for a given Starknet ID, domain, or address.
+
+▸ **GetVerifierData**(`ctx`, `idDomainOrAddr`, `field`, `verifier`) (`*felt.Felt`, `error`)
+
+**Parameters**
+
+| Name             | Type                                                      | Description                                                                                         |
+| :--------------- | :-------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `ctx`            | [context.Context](https://pkg.go.dev/context#Context)     | The context                                                                                         |
+| `idDomainOrAddr` | `string`                                                  | The Starknet ID, .stark domain (.stark suffix is optional), or address                              |
+| `field`          | `string`                                                  | The field name                                                                                      |
+| `verifier`       | `*string`                                                 | The verifier contract address. If nil, it will try to fetch the verifier contract from the chain ID |
+
+**Returns**
+
+([`*felt.Felt`](https://pkg.go.dev/github.com/NethermindEth/juno/core/felt#Felt), `error`)
+
+**Defined in**
+
+[provider/provider.go](https://github.com/metacube-games/starknetid.go/blob/main/provider/provider.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "context"
+  "fmt"
+
+  "github.com/NethermindEth/starknet.go/rpc"
+  "github.com/metacube-games/starknetid.go/constants"
+  "github.com/metacube-games/starknetid.go/provider"
+  "github.com/NethermindEth/juno/core/felt"
+)
+
+func main() {
+  // Step 1: Create a new RPC provider client
+  client, err := rpc.NewProvider(RPC_URL)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 2: Create a new Starknet.id provider
+  provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
+  if err != nil {
+    panic(err)
+  }
+
+  // Optional: Verifier contract address
+  var verifierAddress *string
+  verifierAddress = nil  // or use a specific address: verifierAddress = "0x1234567890abcdef"
+
+  // Step 3: Get the verifier data for a given Starknet ID, domain or address
+  verifierData, err := provider.GetVerifierData(context.Background(), "example.stark", "name", verifierAddress)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Verifier data: %s\n", verifierData.String())
+}
+```
+
+---
+
+#### GetExtendedVerifierData
+
+Returns the extended verifier data for a given Starknet ID, domain, or address.
+
+▸ **GetExtendedVerifierData**(`ctx`, `idDomainOrAddr`, `field`, `length`, `verifier`) (`[]*felt.Felt`, `error`)
+
+**Parameters**
+
+| Name             | Type                                                      | Description                                                                                         |
+| :--------------- | :-------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `ctx`            | [context.Context](https://pkg.go.dev/context#Context)     | The context                                                                                         |
+| `idDomainOrAddr` | `string`                                                  | The Starknet ID, .stark domain (.stark suffix is optional), or address                              |
+| `field`          | `string`                                                  | The field name                                                                                      |
+| `length`         | `int`                                                     | The length of the data                                                                              |
+| `verifier`       | `*string`                                                 | The verifier contract address. If nil, it will try to fetch the verifier contract from the chain ID |
+
+**Returns**
+
+([`[]*felt.Felt`](https://pkg.go.dev/github.com/NethermindEth/juno/core/felt#Felt), `error`)
+
+**Defined in**
+
+[provider/provider.go](https://github.com/metacube-games/starknetid.go/blob/main/provider/provider.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "context"
+  "fmt"
+
+  "github.com/NethermindEth/starknet.go/rpc"
+  "github.com/metacube-games/starknetid.go/constants"
+  "github.com/metacube-games/starknetid.go/provider"
+  "github.com/NethermindEth/juno/core/felt"
+)
+
+func main() {
+  // Step 1: Create a new RPC provider client
+  client, err := rpc.NewProvider(RPC_URL)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 2: Create a new Starknet.id provider
+  provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
+  if err != nil {
+    panic(err)
+  }
+
+  // Optional: Verifier contract address
+  var verifierAddress *string
+  verifierAddress = nil  // or use a specific address: verifierAddress = "0x1234567890abcdef"
+
+  // Step 3: Get the extended verifier data for a given Starknet ID, domain or address
+  extendedVerifierData, err := provider.GetExtendedVerifierData(context.Background(), "example.stark", "name", 10, verifierAddress)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Extended verifier data: %v\n", extendedVerifierData)
+}
+```
+
+---
+
+#### GetUnboundedVerifierData
+
+Returns the unbounded verifier data for a given Starknet ID, domain, or address.
+
+▸ **GetUnboundedVerifierData**(`ctx`, `idDomainOrAddr`, `field`, `verifier`) (`[]*felt.Felt`, `error`)
+
+**Parameters**
+
+| Name             | Type                                                      | Description                                                                                         |
+| :--------------- | :-------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `ctx`            | [context.Context](https://pkg.go.dev/context#Context)     | The context                                                                                         |
+| `idDomainOrAddr` | `string`                                                  | The Starknet ID, .stark domain (.stark suffix is optional), or address                              |
+| `field`          | `string`                                                  | The field name                                                                                      |
+| `verifier`       | `*string`                                                 | The verifier contract address. If nil, it will try to fetch the verifier contract from the chain ID |
+
+**Returns**
+
+([`[]*felt.Felt`](https://pkg.go.dev/github.com/NethermindEth/juno/core/felt#Felt), `error`)
+
+**Defined in**
+
+[provider/provider.go](https://github.com/metacube-games/starknetid.go/blob/main/provider/provider.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "context"
+  "fmt"
+
+  "github.com/NethermindEth/starknet.go/rpc"
+  "github.com/metacube-games/starknetid.go/constants"
+  "github.com/metacube-games/starknetid.go/provider"
+  "github.com/NethermindEth/juno/core/felt"
+)
+
+func main() {
+  // Step 1: Create a new RPC provider client
+  client, err := rpc.NewProvider(RPC_URL)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 2: Create a new Starknet.id provider
+  provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
+  if err != nil {
+    panic(err)
+  }
+
+  // Optional: Verifier contract address
+  var verifierAddress *string
+  verifierAddress = nil  // or use a specific address: verifierAddress = "0x1234567890abcdef"
+
+  // Step 3: Get the unbounded verifier data for a given Starknet ID, domain or address
+  unboundedVerifierData, err := provider.GetUnboundedVerifierData(context.Background(), "example.stark", "kyc", verifierAddress)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Unbounded verifier data: %v\n", unboundedVerifierData)
+}
+```
+
+---
+
+#### GetPfpVerifierData
+
+Returns the profile picture verifier data for a given Starknet ID, domain, or address.
+
+▸ **GetPfpVerifierData**(`ctx`, `idDomainOrAddr`, `verifier`) (`[]*felt.Felt`, `error`)
+
+**Parameters**
+
+| Name             | Type                                                      | Description                                                                                         |
+| :--------------- | :-------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `ctx`            | [context.Context](https://pkg.go.dev/context#Context)     | The context                                                                                         |
+| `idDomainOrAddr` | `string`                                                  | The Starknet ID, .stark domain (.stark suffix is optional), or address                              |
+| `verifier`       | `*string`                                                 | The verifier contract address. If nil, it will try to fetch the verifier contract from the chain ID |
+
+**Returns**
+
+([`[]*felt.Felt`](https://pkg.go.dev/github.com/NethermindEth/juno/core/felt#Felt), `error`)
+
+**Defined in**
+
+[provider/provider.go](https://github.com/metacube-games/starknetid.go/blob/main/provider/provider.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "context"
+  "fmt"
+
+  "github.com/NethermindEth/starknet.go/rpc"
+  "github.com/metacube-games/starknetid.go/constants"
+  "github.com/metacube-games/starknetid.go/provider"
+  "github.com/NethermindEth/juno/core/felt"
+)
+
+func main() {
+  // Step 1: Create a new RPC provider client
+  client, err := rpc.NewProvider(RPC_URL)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 2: Create a new Starknet.id provider
+  provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
+  if err != nil {
+    panic(err)
+  }
+
+  // Optional: Verifier contract address
+  var verifierAddress *string
+  verifierAddress = nil  // or use a specific address: verifierAddress = "0x1234567890abcdef"
+
+  // Step 3: Get the profile picture verifier data for a given Starknet ID, domain or address
+  pfpVerifierData, err := provider.GetPfpVerifierData(context.Background(), "example.stark", verifierAddress)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Profile picture verifier data: %v\n", pfpVerifierData)
+}
+```
+
+### Utils
+
+#### GetIdentityContract
+
+Returns the identity contract address for a given chain.
+
+▸ **GetIdentityContract**(`chainId`) (`string`, `error`)
+
+**Parameters**
+
+| Name      | Type                                      | Description                              |
+| :-------- | :---------------------------------------- | ---------------------------------------- |
+| `chainId` | `types.StarknetChainId`                   | The chain ID                             |
+
+**Returns**
+
+(`string`, `error`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+  "github.com/metacube-games/starknetid.go/constants"
+)
+
+func main() {
+  // Get the identity contract address for the mainnet
+  contractAddress, err := utils.GetIdentityContract(constants.SN_MAIN)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Identity contract address: %s\n", contractAddress)
+}
+```
+
+---
+
+#### GetNamingContract
+
+Returns the naming contract address for a given chain.
+
+▸ **GetNamingContract**(`chainId`) (`string`, `error`)
+
+**Parameters**
+
+| Name      | Type                                      | Description                              |
+| :-------- | :---------------------------------------- | ---------------------------------------- |
+| `chainId` | `types.StarknetChainId`                   | The chain ID                             |
+
+**Returns**
+
+(`string`, `error`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+  "github.com/metacube-games/starknetid.go/constants"
+)
+
+func main() {
+  // Get the naming contract address for the mainnet
+  contractAddress, err := utils.GetNamingContract(constants.SN_MAIN)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Naming contract address: %s\n", contractAddress)
+}
+```
+
+---
+
+#### GetVerifierContract
+
+Returns the verifier contract address for a given chain.
+
+▸ **GetVerifierContract**(`chainId`) (`string`, `error`)
+
+**Parameters**
+
+| Name      | Type                                      | Description                              |
+| :-------- | :---------------------------------------- | ---------------------------------------- |
+| `chainId` | `types.StarknetChainId`                   | The chain ID                             |
+
+**Returns**
+
+(`string`, `error`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+  "github.com/metacube-games/starknetid.go/constants"
+)
+
+func main() {
+  // Get the verifier contract address for the mainnet
+  contractAddress, err := utils.GetVerifierContract(constants.SN_MAIN)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Verifier contract address: %s\n", contractAddress)
+}
+```
+
+---
+
+#### GetPfpVerifierContract
+
+Returns the profile picture verifier contract address for a given chain.
+
+▸ **GetPfpVerifierContract**(`chainId`) (`string`, `error`)
+
+**Parameters**
+
+| Name      | Type                                      | Description                              |
+| :-------- | :---------------------------------------- | ---------------------------------------- |
+| `chainId` | `types.StarknetChainId`                   | The chain ID                             |
+
+**Returns**
+
+(`string`, `error`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+  "github.com/metacube-games/starknetid.go/constants"
+)
+
+func main() {
+  // Get the profile picture verifier contract address for the mainnet
+  contractAddress, err := utils.GetPfpVerifierContract(constants.SN_MAIN)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Profile picture verifier contract address: %s\n", contractAddress)
+}
+```
+
+---
+
+#### GetPopVerifierContract
+
+Returns the proof of personhood verifier contract address for a given chain.
+
+▸ **GetPopVerifierContract**(`chainId`) (`string`, `error`)
+
+**Parameters**
+
+| Name      | Type                                      | Description                              |
+| :-------- | :---------------------------------------- | ---------------------------------------- |
+| `chainId` | `types.StarknetChainId`                   | The chain ID                             |
+
+**Returns**
+
+(`string`, `error`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+  "github.com/metacube-games/starknetid.go/constants"
+)
+
+func main() {
+  // Get the proof of personhood verifier contract address for the mainnet
+  contractAddress, err := utils.GetPopVerifierContract(constants.SN_MAIN)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Proof of personhood verifier contract address: %s\n", contractAddress)
+}
+```
+
+---
+
+#### GetMulticallContract
+
+Returns the multicall contract address for a given chain.
+
+▸ **GetMulticallContract**(`chainId`) (`string`, `error`)
+
+**Parameters**
+
+| Name      | Type                                      | Description                              |
+| :-------- | :---------------------------------------- | ---------------------------------------- |
+| `chainId` | `types.StarknetChainId`                   | The chain ID                             |
+
+**Returns**
+
+(`string`, `error`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+  "github.com/metacube-games/starknetid.go/constants"
+)
+
+func main() {
+  // Get the multicall contract address for the mainnet
+  contractAddress, err := utils.GetMulticallContract(constants.SN_MAIN)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Multicall contract address: %s\n", contractAddress)
+}
+```
+
+---
+
+#### GetUtilsMulticallContract
+
+Returns the utils multicall contract address for a given chain.
+
+▸ **GetUtilsMulticallContract**(`chainId`) (`string`, `error`)
+
+**Parameters**
+
+| Name      | Type                                      | Description                              |
+| :-------- | :---------------------------------------- | ---------------------------------------- |
+| `chainId` | `types.StarknetChainId`                   | The chain ID                             |
+
+**Returns**
+
+(`string`, `error`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+  "github.com/metacube-games/starknetid.go/constants"
+)
+
+func main() {
+  // Get the utils multicall contract address for the mainnet
+  contractAddress, err := utils.GetUtilsMulticallContract(constants.SN_MAIN)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Utils multicall contract address: %s\n", contractAddress)
+}
+```
+
+---
+
+#### GetBlobbertContract
+
+Returns the blobbert contract address for a given chain.
+
+▸ **GetBlobbertContract**(`chainId`) (`string`, `error`)
+
+**Parameters**
+
+| Name      | Type                                      | Description                              |
+| :-------- | :---------------------------------------- | ---------------------------------------- |
+| `chainId` | `types.StarknetChainId`                   | The chain ID                             |
+
+**Returns**
+
+(`string`, `error`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+  "github.com/metacube-games/starknetid.go/constants"
+)
+
+func main() {
+  // Get the blobbert contract address for the mainnet
+  contractAddress, err := utils.GetBlobbertContract(constants.SN_MAIN)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Blobbert contract address: %s\n", contractAddress)
+}
+```
+
+---
+
+#### IsStarkDomain
+
+Checks if a domain is a starknet.id domain based on the following regular expression:  
+`^(?:[a-z0-9-]{1,48}(?:[a-z0-9-]{1,48}[a-z0-9-])?\.)*[a-z0-9-]{1,48}\.stark$`
+
+▸ **IsStarkDomain**(`domain`) (`bool`)
+
+**Parameters**
+
+| Name      | Type     | Description                          |
+| :-------- | :------- | ------------------------------------ |
+| `domain`  | `string` | The domain to check                  |
+
+**Returns**
+
+(`bool`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+)
+
+func main() {
+  // Check if a domain is a valid .stark domain
+  isStarkDomain := utils.IsStarkDomain("example.stark")
+  fmt.Printf("Is 'example.stark' a valid .stark domain? %v\n", isStarkDomain)
+}
+```
+
+---
+
+#### IsStarkRootDomain
+
+Checks if a domain is a stark root domain based on the following regular expression:  
+`^([a-z0-9-]){1,48}\.stark$`
+
+▸ **IsStarkRootDomain**(`domain`) (`bool`)
+
+**Parameters**
+
+| Name      | Type     | Description                          |
+| :-------- | :------- | ------------------------------------ |
+| `domain`  | `string` | The domain to check                  |
+
+**Returns**
+
+(`bool`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+)
+
+func main() {
+  // Check if a domain is a valid .stark root domain
+  isStarkRootDomain := utils.IsStarkRootDomain("example.stark")
+  fmt.Printf("Is 'example.stark' a valid .stark root domain? %v\n", isStarkRootDomain)
+}
+```
+
+---
+
+#### IsSubdomain
+
+Checks if a domain is a subdomain.
+
+▸ **IsSubdomain**(`subdomain`) (`bool`)
+
+**Parameters**
+
+| Name        | Type     | Description                        |
+| :---------- | :------- | ---------------------------------- |
+| `subdomain` | `string` | The domain to check                |
+
+**Returns**
+
+(`bool`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+)
+
+func main() {
+  // Check if a domain is a subdomain
+  isSubdomain := utils.IsSubdomain("sub.example.stark")
+  fmt.Printf("Is 'sub.example.stark' a subdomain? %v\n", isSubdomain)
+}
+```
+
+---
+
+#### IsBraavosSubdomain
+
+Checks if a domain is a Braavos subdomain based on the following regular expression:  
+`^([a-z0-9-]){1,48}\.braavos\.stark$`
+
+▸ **IsBraavosSubdomain**(`domain`) (`bool`)
+
+**Parameters**
+
+| Name     | Type     | Description                           |
+| :------- | :------- | ------------------------------------- |
+| `domain` | `string` | The domain to check                   |
+
+**Returns**
+
+(`bool`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+)
+
+func main() {
+  // Check if a domain is a Braavos subdomain
+  isBraavosSubdomain := utils.IsBraavosSubdomain("example.braavos.stark")
+  fmt.Printf("Is 'example.braavos.stark' a Braavos subdomain? %v\n", isBraavosSubdomain)
+}
+```
+
+---
+
+#### IsXplorerSubdomain
+
+Checks if a domain is an xplorer subdomain based on the following regular expression:  
+`^([a-z0-9-]){1,48}\.xplorer\.stark$`
+
+▸ **IsXplorerSubdomain**(`domain`) (`bool`)
+
+**Parameters**
+
+| Name     | Type     | Description                           |
+| :------- | :------- | ------------------------------------- |
+| `domain` | `string` | The domain to check                   |
+
+**Returns**
+
+(`bool`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+)
+
+func main() {
+  // Check if a domain is an xplorer subdomain
+  isXplorerSubdomain := utils.IsXplorerSubdomain("example.xplorer.stark")
+  fmt.Printf("Is 'example.xplorer.stark' an xplorer subdomain? %v\n", isXplorerSubdomain)
+}
+```
+
+---
+
+#### EncodeDomain
+
+Encodes a starknet.id domain into a list of felt, with one felt per subdomain.
+
+▸ **EncodeDomain**(`domain`) (`[]*felt.Felt`, `error`)
+
+**Parameters**
+
+| Name     | Type     | Description                                      |
+| :------- | :------- | ------------------------------------------------ |
+| `domain` | `string` | The domain to encode (.stark suffix is optional) |
+
+**Returns**
+
+([`[]*felt.Felt`](https://pkg.go.dev/github.com/NethermindEth/juno/core/felt#Felt), `error`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+  "github.com/NethermindEth/juno/core/felt"
+)
+
+func main() {
+  // Encode a domain into a list of felt
+  encodedDomain, err := utils.EncodeDomain("abc.def.stark")
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Encoded domain: %v\n", encodedDomain)
+}
+```
+
+---
+
+#### DecodeDomain
+
+Decodes a starknet.id domain from a list of felt.
+
+▸ **DecodeDomain**(`encoded`) (`string`)
+
+**Parameters**
+
+| Name      | Type                                                                              | Description              |
+| :-------- | :-------------------------------------------------------------------------------- | ------------------------ |
+| `encoded` | [`[]*felt.Felt`](https://pkg.go.dev/github.com/NethermindEth/juno/core/felt#Felt) | The encoded domain       |
+
+**Returns**
+
+(`string`)
+
+**Defined in**
+
+[utils/utils.go](https://github.com/metacube-games/starknetid.go/blob/main/utils/utils.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "fmt"
+  "github.com/metacube-games/starknetid.go/utils"
+  "github.com/NethermindEth/juno/core/felt"
+)
+
+func main() {
+  // Decode a list of felt into a domain
+  encoded := []*felt.Felt{
+    ...,
+  }
+  decodedDomain := utils.DecodeDomain(encoded)
+  fmt.Printf("Decoded domain: %s\n", decodedDomain)
+}
+```
