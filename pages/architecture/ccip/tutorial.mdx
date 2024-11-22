@@ -117,7 +117,7 @@ struct StarknetIDOffChainResolverUpdate {
 
 Please note that the Starknet ID indexer fetches new `StarknetIDOffChainResolverUpdate` events at an interval of every 10 minutes.
 
-🔗 For a comprehensive overview of the contract's code, visit the repository: [starknet-id/resolver_ccip](https://github.com/starknet-id/resolver_ccip)
+🔗 For a comprehensive overview of the contract's code, visit the repository: [lfglabs-dev/resolver_ccip](https://github.com/lfglabs-dev/resolver_ccip)
 
 ## Building the Offchain Resolver API with Rust
 
@@ -144,7 +144,7 @@ lazy_static = "1.4"
 
 ### Define Your Application State and Models
 
-**AppState Configuration**: Create structures to hold your application's configuration, including the Notion API key and database ID. See the [`config.toml` template file](https://github.com/starknet-id/api.ccip-demo.starknet.id/blob/master/config.template.toml) for reference.
+**AppState Configuration**: Create structures to hold your application's configuration, including the Notion API key and database ID. See the [`config.toml` template file](https://github.com/lfglabs-dev/api.ccip-demo.starknet.id/blob/master/config.template.toml) for reference.
 
 ```rust
 // Inside src/models.rs
@@ -255,7 +255,7 @@ match ecdsa_sign(&state.conf.starknet.private_key, &hash) {
 }
 ```
 
-🔗 For the complete code and further details, visit the repository: [starknet-id/api.ccip-demo.starknet.id](https://github.com/starknet-id/api.ccip-demo.starknet.id)
+🔗 For the complete code and further details, visit the repository: [lfglabs-dev/api.ccip-demo.starknet.id](https://github.com/lfglabs-dev/api.ccip-demo.starknet.id)
 
 ## Deploy & Set Up Your Domain & Resolver
 
@@ -310,7 +310,7 @@ error LibraryError: RPC: starknet_call with params {"request":{"contract_address
 
 Integrating offchain resolving into your frontend application is streamlined and efficient, thanks to the `getAddressFromStarkName` function provided in `starknetid.js`. This function seamlessly manages the offchain resolving process, ensuring a smooth user experience.
 
-Reverse resolving is also supported with the `getStarkName` function. Note that for it to work you first need to call `set_address_to_domain` of the [naming contract](https://github.com/starknet-id/naming/blob/master/src/interface/naming.cairo#L88).
+Reverse resolving is also supported with the `getStarkName` function. Note that for it to work you first need to call `set_address_to_domain` of the [naming contract](https://github.com/lfglabs-dev/naming/blob/master/src/interface/naming.cairo#L88).
 
 🔗 You can refer to the [starknetid.js documentation](https://docs.Starknet.id/devs/starknetidjs#getaddressfromstarkname)
 
