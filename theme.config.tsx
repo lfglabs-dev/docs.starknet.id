@@ -12,12 +12,12 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: "https://github.com/lfglabs-dev/docs.starknet.id",
   footer: { component: null },
-  useNextSeoProps() {
-    return {
-      titleTemplate: "%s",
-    };
-  },
-  head: <HeadComponent />,
+  head: (
+    <>
+      <HeadComponent />
+      <title>%s</title>
+    </>
+  ),
 };
 
 export default config;
