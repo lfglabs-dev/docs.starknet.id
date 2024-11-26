@@ -1,5 +1,5 @@
 import React from "react";
-import { DocsThemeConfig } from "nextra-theme-docs";
+import { DocsThemeConfig, useConfig } from "nextra-theme-docs";
 import HeadComponent from "@components/head";
 
 const config: DocsThemeConfig = {
@@ -12,12 +12,15 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: "https://github.com/lfglabs-dev/docs.starknet.id",
   footer: { component: null },
-  head: (
-    <>
-      <HeadComponent />
-      <title>%s</title>
-    </>
-  ),
+  head: () => {
+    const { title } = useConfig()
+    return (
+      <>
+        <HeadComponent />
+        <title>{title ?? "Starknet ID Docs"}</title>
+      </>
+    )
+  },
 };
 
 export default config;
