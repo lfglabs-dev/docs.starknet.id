@@ -160,6 +160,68 @@ func main() {
 
 ---
 
+#### GetStarkNames
+
+Returns the .stark domains for a given list of addresses.
+
+▸ **GetStarkNames**(`ctx`, `addresses`, `multicall`) (`[]string`, `error`)
+
+**Parameters**
+
+| Name        | Type                                                      | Description                                                                                           |
+| :---------- | :-------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `ctx`       | [context.Context](https://pkg.go.dev/context#Context)     | The context                                                                                           |
+| `addresses` | `[]string`                                                | The list of addresses                                                                                 |
+| `multicall` | `*string`                                                 | The multicall contract address. If nil, it will try to fetch the multicall contract from the chain ID |
+
+**Returns**
+
+(`[]string`, `error`)
+
+**Defined in**
+
+[provider/provider.go](https://github.com/metacube-games/starknetid.go/blob/main/provider/provider.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "context"
+  "fmt"
+
+  "github.com/NethermindEth/starknet.go/rpc"
+  "github.com/metacube-games/starknetid.go/constants"
+  "github.com/metacube-games/starknetid.go/provider"
+)
+
+func main() {
+  // Step 1: Create a new RPC provider client
+  client, err := rpc.NewProvider(RPC_URL)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 2: Create a new Starknet.id provider
+  provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
+  if err != nil {
+    panic(err)
+  }
+
+  // Optional: Multicall contract address
+  var multicallAddress *string
+  multicallAddress = nil  // or use a specific address: multicallAddress = "0x1234567890abcdef"
+
+  // Step 3: Get the .stark domains for a given list of addresses
+  domains, err := provider.GetStarkNames(context.Background(), []string{"0x1234567890abcdef", "0xabcdef123456"}, multicallAddress)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf(".stark domains: %v\n", domains)
+```
+
 #### GetStarknetId
 
 Returns the Starknet ID for a given .stark domain.
@@ -668,6 +730,148 @@ func main() {
 
   fmt.Printf("Profile picture verifier data: %v\n", pfpVerifierData)
 }
+```
+
+---
+
+#### GetProfileData
+
+Returns the profile for a given address.
+
+▸ **GetProfileData**(`ctx`, `address`, `useDefaultPfp`, `verifier`, `pfpVerifier`, `popVerifier`) (`types.StarkProfile`, `error`)
+
+**Parameters**
+
+| Name             | Type                                                      | Description                                                                                                             |
+| :--------------- | :-------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `ctx`            | [context.Context](https://pkg.go.dev/context#Context)     | The context                                                                                                             |
+| `address`        | `string`                                                  | The address                                                                                                             |
+| `useDefaultPfp`  | `bool`                                                    | Use the default profile picture                                                                                         |
+| `verifier`       | `*string`                                                 | The verifier contract address. If nil, it will try to fetch the verifier contract from the chain ID                     |
+| `pfpVerifier`    | `*string`                                                 | The profile picture verifier contract address. If nil, it will try to fetch the verifier contract from the chain ID     |
+| `popVerifier`    | `*string`                                                 | The proof of personhood verifier contract address. If nil, it will try to fetch the verifier contract from the chain ID |
+
+**Returns**
+
+([`types.StarkProfile`](https://pkg.go.dev/github.com/metacube-games/starknetid.go/types#StarkProfile), `error`)
+
+**Defined in**
+
+[provider/provider.go](https://github.com/metacube-games/starknetid.go/blob/main/provider/provider.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "context"
+  "fmt"
+
+  "github.com/NethermindEth/starknet.go/rpc"
+  "github.com/metacube-games/starknetid.go/constants"
+  "github.com/metacube-games/starknetid.go/provider"
+  "github.com/NethermindEth/juno/core/felt"
+)
+
+func main() {
+  // Step 1: Create a new RPC provider client
+  client, err := rpc.NewProvider(RPC_URL)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 2: Create a new Starknet.id provider
+  provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
+  if err != nil {
+    panic(err)
+  }
+
+  // Optional: Verifier contract address
+  var verifierAddress *string
+  verifierAddress = nil  // or use a specific address: verifierAddress = "0x1234567890abcdef"
+
+  // Optional: Profile picture verifier contract address
+  var pfpVerifierAddress *string
+  pfpVerifierAddress = nil  // or use a specific address: pfpVerifierAddress = "0x1234567890abcdef"
+
+  // Optional: Proof of personhood verifier contract address
+  var popVerifierAddress *string
+  popVerifierAddress = nil  // or use a specific address: popVerifierAddress = "0x1234567890abcdef"
+
+  // Step 3: Get the profile for a given address
+  profile, err := provider.GetProfileData(context.Background(), "0x1234567890abcdef", true, verifierAddress, pfpVerifierAddress, popVerifierAddress)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Profile: %v\n", profile)
+```
+
+---
+
+#### GetStarkProfiles
+
+Returns the .stark domain and profile picture for a given list of addresses.
+
+▸ **GetStarkProfiles**(`ctx`, `addresses`, `useDefaultPfp`, `verifier`) (`[]types.StarkProfile`, `error`)
+
+**Parameters**
+
+| Name             | Type                                                      | Description                                                                                         |
+| :--------------- | :-------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `ctx`            | [context.Context](https://pkg.go.dev/context#Context)     | The context                                                                                         |
+| `addresses`      | `[]string`                                                | The list of addresses                                                                               |
+| `useDefaultPfp`  | `bool`                                                    | Use the default profile picture                                                                     |
+| `verifier`       | `*string`                                                 | The verifier contract address. If nil, it will try to fetch the verifier contract from the chain ID |
+
+**Returns**
+
+([`[]types.StarkProfile`](https://pkg.go.dev/github.com/metacube-games/starknetid.go/types#StarkProfile), `error`)
+
+**Defined in**
+
+[provider/provider.go](https://github.com/metacube-games/starknetid.go/blob/main/provider/provider.go)
+
+**Example usage**
+
+```go
+package main
+
+import (
+  "context"
+  "fmt"
+
+  "github.com/NethermindEth/starknet.go/rpc"
+  "github.com/metacube-games/starknetid.go/constants"
+  "github.com/metacube-games/starknetid.go/provider"
+  "github.com/NethermindEth/juno/core/felt"
+)
+
+func main() {
+  // Step 1: Create a new RPC provider client
+  client, err := rpc.NewProvider(RPC_URL)
+  if err != nil {
+    panic(err)
+  }
+
+  // Step 2: Create a new Starknet.id provider
+  provider, err := provider.NewProvider(client, constants.SN_MAIN, nil)
+  if err != nil {
+    panic(err)
+  }
+
+  // Optional: Verifier contract address
+  var verifierAddress *string
+  verifierAddress = nil  // or use a specific address: verifierAddress = "0x1234567890abcdef"
+
+  // Step 3: Get the .stark domain and profile picture for a given list of addresses
+  profiles, err := provider.GetStarkProfiles(context.Background(), []string{"0x1234567890abcdef", "0xabcdef123456"}, true, verifierAddress)
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Profiles: %v\n", profiles)
 ```
 
 ### Utils
