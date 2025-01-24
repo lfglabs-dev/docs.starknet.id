@@ -21,12 +21,9 @@ const Encoder: FunctionComponent<EncoderProps> = ({ type }) => {
       if (domain.endsWith("."))
         return setResult("Domain cannot end with a dot.");
       if (
-        !domain
-          .split("")
-          .reduce(
-            (acc, x) => (acc && basicAlphabet.includes(x)) || x === ".",
-            true
-          )
+        !utils.isStarkRootDomain(
+          domain.endsWith(".stark") ? domain : domain + ".stark"
+        )
       )
         return setResult("Invalid characters in domain.");
       const decoded = utils.encodeDomain(domain);
