@@ -169,7 +169,7 @@ console.log(decodedDomain); // Output: fricoben.stark
 
 #### useEncoded
 
-Encodes a domain name into a BigInt. Note: Exclude the `.stark` suffix when passing the domain name.
+Encodes a domain name into a BigInt. Note: Verify the validity of the domain name (you can use [`isStarkDomain`](https://docs.starknet.id/devs/starknetidjs#isstarkdomain)) and exclude the `.stark` suffix when passing the domain name.
 
 ▸ **useEncoded**(`decoded`): `bigint`
 
