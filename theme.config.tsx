@@ -12,14 +12,19 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: "https://github.com/lfglabs-dev/docs.starknet.id",
   footer: { component: null },
+
   head: () => {
-    const { title } = useConfig()
+    const { title } = useConfig();
     return (
       <>
         <HeadComponent />
         <title>{title ?? "Starknet ID Docs"}</title>
+
+        <meta property="og:image" content="https://docs.starknet.id/logo.png" />
+        <meta name="twitter:image" content="https://docs.starknet.id/logo.png" />
+        <meta name="twitter:card" content="summary_large_image" />
       </>
-    )
+    );
   },
 };
 
