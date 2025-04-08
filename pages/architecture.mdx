@@ -1,38 +1,49 @@
+import Image from "next/image";
+import { Card, Cards } from "nextra/components";
+
+import linkIcon from "@components/icons/link.svg";
+
 # Starknet ID Architecture
 
 Explore the foundational elements of Starknet ID's architecture. This page provides a clear overview of the system's core components.
 
-import IdCardIcon from "@components/icons/id-card.svg";
-import LinkIcon from "@components/icons/link.svg";
-import WarningIcon from "@components/icons/warning.svg";
-import { Card, Cards } from "nextra/components";
-
 <Cards>
   <Card
-    icon={<LinkIcon />}
+    icon={
+      <Image src={linkIcon} alt="Identity NFT Icon" width={24} height={24} />
+    }
     title="Identity NFT"
     href="/architecture/identity"
   />
   <Card
-    icon={<LinkIcon />}
+    icon={
+      <Image src={linkIcon} alt="Naming System Icon" width={24} height={24} />
+    }
     title="Stark Naming System"
     href="/architecture/naming"
   />
   <Card
-    icon={<LinkIcon />}
+    icon={
+      <Image src={linkIcon} alt="Subscription Icon" width={24} height={24} />
+    }
     title="Subscription"
     href="/architecture/subscription"
   />
   <Card
-    icon={<LinkIcon />}
+    icon={
+      <Image
+        src={linkIcon}
+        alt="Offchain Resolving Icon"
+        width={24}
+        height={24}
+      />
+    }
     title="Offchain Resolving"
     href="/architecture/ccip"
   />
   <Card
-    icon={<LinkIcon />}
+    icon={<Image src={linkIcon} alt="Audits Icon" width={24} height={24} />}
     title="Audits"
     href="/architecture/audits"
   />
 </Cards>
-
----

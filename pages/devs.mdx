@@ -1,50 +1,57 @@
+import Image from "next/image";
+import { Card, Cards } from "nextra/components";
+
+import codeIcon from "@components/icons/code.svg";
+
 # Starknet ID Developer Guide
 
 Dive into integrating and building on top of Starknet ID to make your dApp seamlessly interact with Stark domains and identities.
 
-import CodeIcon from '@components/icons/code.svg'
-import { Card, Cards } from 'nextra/components'
-
 <Cards>
   <Card
-    icon={<CodeIcon />}
+    icon={<Image src={codeIcon} alt="Starknet ID SDK" width={24} height={24} />}
     title="Starknet ID SDK"
     href="/devs/starknetidjs"
   />
-   <Card
-    icon={<CodeIcon />}
+  <Card
+    icon={<Image src={codeIcon} alt="Starknet ID API" width={24} height={24} />}
     title="Starknet ID API"
     href="/devs/starknetid-api"
   />
-   <Card
-    icon={<CodeIcon />}
+  <Card
+    icon={
+      <Image src={codeIcon} alt="Starknet ID Rust" width={24} height={24} />
+    }
     title="Starknet ID Rust"
     href="/devs/starknetidrs"
   />
-   <Card
-    icon={<CodeIcon />}
+  <Card
+    icon={<Image src={codeIcon} alt="Starknet ID Go" width={24} height={24} />}
     title="Starknet ID Go"
     href="/devs/starknetidgo"
   />
-   <Card
-    icon={<CodeIcon />}
+  <Card
+    icon={<Image src={codeIcon} alt="Starknet.js" width={24} height={24} />}
     title="Starknet.js"
     href="/devs/starknetjs"
   />
-   <Card
-    icon={<CodeIcon />}
+  <Card
+    icon={<Image src={codeIcon} alt="Starknet React" width={24} height={24} />}
     title="Starknet React"
     href="/devs/starknetreact"
   />
-   <Card
-    icon={<CodeIcon />}
+  <Card
+    icon={
+      <Image src={codeIcon} alt="Deployed Contracts" width={24} height={24} />
+    }
     title="Deployed Contracts"
     href="/devs/contracts"
   />
-    <Card
-    icon={<CodeIcon />}
+  <Card
+    icon={
+      <Image src={codeIcon} alt="Integration Examples" width={24} height={24} />
+    }
     title="Integration Examples"
     href="/devs/usecases"
   />
-  
 </Cards>

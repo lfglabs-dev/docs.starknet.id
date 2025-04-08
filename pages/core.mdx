@@ -1,31 +1,42 @@
+import Image from "next/image";
+import { Card, Cards } from "nextra/components";
+
+import idCardIcon from "@components/icons/id-card.svg";
+
 # Core Concepts
 
 Discover how to acquire your domain and effectively manage your identity on Starknet ID.
-
-import IdCardIcon from "@components/icons/id-card.svg";
-import { Card, Cards } from "nextra/components";
 
 ## Explore Features
 
 <Cards>
   <Card
-    icon={<IdCardIcon />}
+    icon={
+      <Image
+        src={idCardIcon}
+        alt="Stark Domain Registration"
+        width={24}
+        height={24}
+      />
+    }
     title="Stark Domain Registration"
     href="/core/features/registration"
   />
   <Card
-    icon={<IdCardIcon />}
+    icon={
+      <Image src={idCardIcon} alt="Identity Building" width={24} height={24} />
+    }
     title="Identity Building"
     href="/core/features/identity"
   />
   <Card
-    icon={<IdCardIcon />}
+    icon={<Image src={idCardIcon} alt="Subscription" width={24} height={24} />}
     title="Subscription"
     href="/core/features/subscription"
   />
-  <Card 
-  icon={<IdCardIcon />} 
-  title="Affiliation" 
-  href="/core/features/affiliation"
+  <Card
+    icon={<Image src={idCardIcon} alt="Affiliation" width={24} height={24} />}
+    title="Affiliation"
+    href="/core/features/affiliation"
   />
 </Cards>

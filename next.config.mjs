@@ -7,13 +7,13 @@ const withNextra = nextra({
   defaultShowCopyCode: true,
 });
 
-export default withNextra({
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   eslint: {
-    // Eslint behaves weirdly in this monorepo.
     ignoreDuringBuilds: true,
   },
-  redirects: () => [
+  redirects: async () => [
     {
       source: "/docs/guide/:slug(typescript|latex|tailwind-css|mermaid)",
       destination: "/docs/guide/advanced/:slug",
@@ -26,17 +26,27 @@ export default withNextra({
     },
   ],
   webpack(config) {
-    const allowedSvgRegex = /components\/icons\/.+\.svg$/;
+    const allowedSvgRegex = /components\/icons\/.*\.svg$/;
 
+    // Safely find the default SVG loader rule
     const fileLoaderRule = config.module.rules.find(
-      (rule) => rule.test instanceof RegExp && rule.test.test(".svg")
+      (rule) =>
+        rule.test && rule.test instanceof RegExp && rule.test.test(".svg")
     );
-    fileLoaderRule.exclude = allowedSvgRegex;
 
+    // Exclude your custom SVG path
+    if (fileLoaderRule) {
+      fileLoaderRule.exclude = allowedSvgRegex;
+    }
+
+    // Add your custom rule for handling SVGs with @svgr/webpack
     config.module.rules.push({
       test: allowedSvgRegex,
       use: ["@svgr/webpack"],
     });
+
     return config;
   },
-});
+};
+
+export default withNextra(nextConfig);

@@ -1,3 +1,14 @@
+// pages/index.mdx
+
+import Image from "next/image";
+import { Card, Cards } from "nextra/components";
+
+import codeIcon from "@components/icons/code.svg";
+import globeIcon from "@components/icons/globe.svg";
+import idCardIcon from "@components/icons/id-card.svg";
+import linkIcon from "@components/icons/link.svg";
+import lightningIcon from "@components/icons/lightning.svg";
+
 # Starknet ID Documentation
 
 Welcome to the Starknet ID documentation. Whether you're a user wanting to get started, a developer aiming to integrate with the Starknet ID ecosystem, or someone curious about the architecture, you've come to the right place!
@@ -6,26 +17,31 @@ Welcome to the Starknet ID documentation. Whether you're a user wanting to get s
 
 ## Get Started
 
-import { Card, Cards } from "nextra/components";
-
 <Cards>
   <Card
-    icon={<img src="/icons/id-card.svg" alt="ID Card Icon" />}
+    icon={<Image src={idCardIcon} alt="Core Concepts" width={24} height={24} />}
     title="Core Concepts"
     href="/core"
   />
   <Card
-    icon={<img src="/icons/code.svg" alt="Code Icon" />}
+    icon={
+      <Image
+        src={codeIcon}
+        alt="Developer Integration"
+        width={24}
+        height={24}
+      />
+    }
     title="Developer Integration"
     href="/devs"
   />
   <Card
-    icon={<img src="/icons/link.svg" alt="Architecture Icon" />}
+    icon={<Image src={linkIcon} alt="Architecture" width={24} height={24} />}
     title="Architecture"
     href="/architecture"
   />
   <Card
-    icon={<img src="/icons/link.svg" alt="Media Kit Icon" />}
+    icon={<Image src={linkIcon} alt="Media Kit" width={24} height={24} />}
     title="Media Kit"
     href="/brand"
   />

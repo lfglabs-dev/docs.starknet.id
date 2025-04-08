@@ -1,14 +1,18 @@
+import Image from "next/image";
+import { Card, Cards } from "nextra/components";
+
+import idCardIcon from "@components/icons/id-card.svg";
+
 # Download Media Kit
 
 Find all branding assets on the media kit below.
 
-import IdCardIcon from "@components/icons/id-card.svg";
-import { Card, Cards } from "nextra/components";
-
 <Cards>
   <Card
-    icon={<IdCardIcon />}
+    icon={
+      <Image src={idCardIcon} alt="Media Kit Icon" width={24} height={24} />
+    }
     title="Media Kit"
     href="https://lfg-labs.notion.site/Brand-Assets-3627d9e3fe8c4282b1bddf771e189f1d"
- />
+  />
 </Cards>
