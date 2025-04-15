@@ -6,31 +6,28 @@ Welcome to the Starknet ID documentation. Whether you're a user wanting to get s
 
 ## Get Started
 
-import CodeIcon from "@components/icons/code.svg";
-import GlobeIcon from "@components/icons/globe.svg";
-import IdCardIcon from "@components/icons/id-card.svg";
-import LinkIcon from "@components/icons/link.svg";
-import LightningIcon from "@components/icons/lightning.svg"; // Using the lightning icon for FAQs
 import { Card, Cards } from "nextra/components";
 
 <Cards>
-  <Card 
-  icon={<IdCardIcon />} 
-  title="Core Concepts" 
-  href="/core" 
-  />
-  <Card 
-  icon={<CodeIcon />} 
-  title="Developer Integration" 
-  href="/devs" 
+  <Card
+    icon={
+      <img src="/icons/id-card.svg" alt="ID Card Icon" width={24} height={24} />
+    }
+    title="Core Concepts"
+    href="/core"
   />
   <Card
-    icon={<LinkIcon />}
+    icon={<img src="/icons/code.svg" alt="Code Icon" width={24} height={24} />}
+    title="Developer Integration"
+    href="/devs"
+  />
+  <Card
+    icon={<img src="/icons/link.svg" alt="Link Icon" width={24} height={24} />}
     title="Architecture"
     href="/architecture"
   />
   <Card
-    icon={<LinkIcon />}
+    icon={<img src="/icons/link.svg" alt="Link Icon" width={24} height={24} />}
     title="Media Kit"
     href="/brand"
   />
