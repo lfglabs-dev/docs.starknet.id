@@ -3,7 +3,7 @@ import { DocsThemeConfig, useConfig } from "nextra-theme-docs";
 import HeadComponent from "@components/head";
 
 const config: DocsThemeConfig = {
-  logo: <img src="/new-logo.svg" style={{ height: "36px", maxWidth: "172px" }} alt="Starknet-ID" />,
+  logo: <img src="/logo.svg" style={{ height: "36px", maxWidth: "172px" }} alt="Starknet-ID" />,
   project: {
     link: "https://github.com/lfglabs-dev",
   },
