@@ -2,13 +2,26 @@
 
 Find all branding assets on the media kit below.
 
-import IdCardIcon from "@components/icons/id-card.svg";
+
+import LinkIcon from "@components/icons/link.svg";
+import LightningIcon from "@components/icons/lightning.svg";
 import { Card, Cards } from "nextra/components";
 
+
 <Cards>
+ <Card 
+  icon={<LinkIcon />} 
+  title="Starknet ID" 
+  href="/brand/starknet-id" 
+  />
   <Card
-    icon={<IdCardIcon />}
-    title="Media Kit"
-    href="https://lfg-labs.notion.site/Brand-Assets-3627d9e3fe8c4282b1bddf771e189f1d"
- />
+    icon={<LinkIcon />}
+    title="Starknet Quest"
+    href="/brand/starknetquest"
+  />
+  <Card
+    icon={<LinkIcon />}
+    title="Starkurabu"
+    href="/brand/starkurabu"
+  />
 </Cards>
