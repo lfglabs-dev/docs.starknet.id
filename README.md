@@ -14,4 +14,4 @@ Click the button to clone this repository and deploy it on Vercel:
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](https://github.com/lfglabs-dev/docs.starknet.id/blob/main/LICENSE).
